@@ -117,32 +117,20 @@ public class MiscUtil
         return readTextContent( new InputStreamReader( in, UTF_8 ) );
     }
     
-    public static String readTextResource( final ClassLoader cl,
-                                           final String resourceFullPath )
+    public static String readTextResource( final ClassLoader cl, final String resourceFullPath )
     {
-        final InputStream in = cl.getResourceAsStream( resourceFullPath );
-        
-        try
+        try( final InputStream in = cl.getResourceAsStream( resourceFullPath ) )
         {
             return readTextContent( in );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
             Sapphire.service( LoggingService.class ).log( e );
             return "";
         }
-        finally
-        {
-            try
-            {
-                in.close();
-            }
-            catch( IOException e ) {}
-        }
     }
     
-    public static String readTextResource( final Class<?> c,
-                                           final String resourceLocalName )
+    public static String readTextResource( final Class<?> c, final String resourceLocalName )
     {
         final ClassLoader cl = c.getClassLoader();
         final String resourcePath = c.getName().replace( '.', '/' ) + "." + resourceLocalName;

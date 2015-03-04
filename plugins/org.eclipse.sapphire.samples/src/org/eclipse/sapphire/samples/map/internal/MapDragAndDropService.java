@@ -51,11 +51,8 @@ public class MapDragAndDropService extends DragAndDropService
         final IFile file = (IFile) context.object();
         final List<String> locations = new ArrayList<String>();
         
-        InputStream in = null;
-        
-        try
+        try( final InputStream in = file.getContents() )
         {
-            in = file.getContents();
             final BufferedReader br = new BufferedReader( new InputStreamReader( in, UTF_8 ) );
             
             for( String line = br.readLine(); line != null; line = br.readLine() )
@@ -68,24 +65,13 @@ public class MapDragAndDropService extends DragAndDropService
                 }
             }
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
             Sapphire.service( LoggingService.class ).log( e );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
             Sapphire.service( LoggingService.class ).log( e );
-        }
-        finally
-        {
-            if( in != null )
-            {
-                try
-                {
-                    in.close();
-                }
-                catch( IOException e ) {}
-            }
         }
         
         if( ! locations.isEmpty() )

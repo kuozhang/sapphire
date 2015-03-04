@@ -199,23 +199,15 @@ public final class LocalizableText
             {
                 Properties properties = null;
                 
-                try
+                try( final InputStream in = input )
                 {
                     properties = new Properties();
                     properties.load( input );
                 }
-                catch( IOException e )
+                catch( final IOException e )
                 {
                     System.err.println( "Error loading " + variant );
                     e.printStackTrace();
-                }
-                finally
-                {
-                    try
-                    {
-                        input.close();
-                    }
-                    catch( IOException e ) {}
                 }
                 
                 if( properties != null )

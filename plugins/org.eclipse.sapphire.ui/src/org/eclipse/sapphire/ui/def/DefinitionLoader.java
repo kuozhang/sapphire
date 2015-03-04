@@ -126,33 +126,24 @@ public final class DefinitionLoader
             }
         }
         
-        final InputStream stream = this.context.findResource( name.replace( '.', '/' ) + ".sdef" );
-        
-        if( stream == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
         final Resource resource;
         
-        try
+        try( final InputStream stream = this.context.findResource( name.replace( '.', '/' ) + ".sdef" ) )
         {
-            try
+            if( stream == null )
             {
-                resource = new RootXmlResource( new XmlResourceStore( new DefinitionLoaderResourceStore( stream, this.context ) ) );
+                throw new IllegalArgumentException();
             }
-            catch( ResourceStoreException e )
-            {
-                throw new IllegalArgumentException( e );
-            }
+            
+            resource = new RootXmlResource( new XmlResourceStore( new DefinitionLoaderResourceStore( stream, this.context ) ) );
         }
-        finally
+        catch( final ResourceStoreException e )
         {
-            try
-            {
-                stream.close();
-            }
-            catch( IOException e ) {}
+            throw new IllegalArgumentException( e );
+        }
+        catch( final IOException e )
+        {
+            throw new IllegalArgumentException( e );
         }
         
         this.sdef = ISapphireUiDef.TYPE.instantiate( resource );

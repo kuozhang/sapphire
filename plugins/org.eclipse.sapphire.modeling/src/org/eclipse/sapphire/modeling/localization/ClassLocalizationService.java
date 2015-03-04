@@ -24,8 +24,7 @@ public final class ClassLocalizationService extends StandardLocalizationService
 {
     private final Class<?> cl;
     
-    public ClassLocalizationService( final Class<?> cl,
-                                     final Locale locale )
+    public ClassLocalizationService( final Class<?> cl, final Locale locale )
     {
         super( locale );
 
@@ -33,8 +32,7 @@ public final class ClassLocalizationService extends StandardLocalizationService
     }
 
     @Override
-    protected boolean load( final Locale locale,
-                            final Map<String,String> keyToText )
+    protected boolean load( final Locale locale, final Map<String,String> keyToText )
     {
         final String path = this.cl.getName().replace( '.', '/' );
         
@@ -65,17 +63,13 @@ public final class ClassLocalizationService extends StandardLocalizationService
             
             if( stream != null )
             {
-                try
+                try( final InputStream in = stream )
                 {
                     return parse( stream, keyToText );
                 }
-                finally
+                catch( final IOException e )
                 {
-                    try
-                    {
-                        stream.close();
-                    }
-                    catch( IOException e ) {}
+                    // Do nothing and let false be returned.
                 }
             }
         }

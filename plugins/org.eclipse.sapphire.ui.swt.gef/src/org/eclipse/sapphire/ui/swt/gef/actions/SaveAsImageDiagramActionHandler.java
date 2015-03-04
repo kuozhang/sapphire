@@ -13,7 +13,7 @@
 package org.eclipse.sapphire.ui.swt.gef.actions;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.OutputStream;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
@@ -120,45 +120,36 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 
             Image image = new Image( diagramPresentation.display(), rectangle.width, rectangle.height );
 
-            FileOutputStream output = null;
-            GC gc = null;
-            SWTGraphics graphics = null;
-            try
+            try( final OutputStream output = new FileOutputStream( filePath ) )
             {
-                gc = new GC( image );
-                graphics = new SWTGraphics( gc );
-                figure.paint( graphics );
-
-                ImageLoader loader = new ImageLoader();
-                loader.data = new ImageData[] { image.getImageData() };
-                
-                output = new FileOutputStream( filePath );
-
-                loader.save( output, SWT.IMAGE_PNG );
-                output.flush();
+                GC gc = null;
+                SWTGraphics graphics = null;
+                try
+                {
+                    gc = new GC( image );
+                    graphics = new SWTGraphics( gc );
+                    figure.paint( graphics );
+    
+                    ImageLoader loader = new ImageLoader();
+                    loader.data = new ImageData[] { image.getImageData() };
+                    
+                    loader.save( output, SWT.IMAGE_PNG );
+                    output.flush();
+                }
+                finally
+                {
+                    image.dispose();
+                    
+                    if (gc != null)
+                        gc.dispose();
+                    
+                    if (graphics != null)
+                        graphics.dispose();
+                }
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
                 Sapphire.service( LoggingService.class ).log( e );
-            }
-            finally
-            {
-                image.dispose();
-                
-                if (gc != null)
-                    gc.dispose();
-                
-                if (graphics != null)
-                    graphics.dispose();
-                
-            	if (output != null)
-            	{
-            		try
-            		{
-            			output.close();
-            		}
-            		catch (IOException e) {}
-            	}
             }
         }
 

@@ -33,24 +33,11 @@ public class UrlResourceStore extends ByteArrayResourceStore
     {
         this.url = url;
         
-        try
+        try( final InputStream in = this.url.openStream() )
         {
-            final InputStream in = this.url.openStream();
-            
-            try
-            {
-                setContents( in );
-            }
-            finally
-            {
-                try
-                {
-                    in.close();
-                }
-                catch( IOException e ) {}
-            }
+            setContents( in );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
             throw new ResourceStoreException( e );
         }
@@ -97,24 +84,11 @@ public class UrlResourceStore extends ByteArrayResourceStore
                         return false;
                     }
                     
-                    try
+                    try( final InputStream stream = resFileUrl.openStream() )
                     {
-                        final InputStream stream = resFileUrl.openStream();
-                        
-                        try
-                        {
-                            return parse( stream, keyToText );
-                        }
-                        finally
-                        {
-                            try
-                            {
-                                stream.close();
-                            }
-                            catch( IOException e ) {}
-                        }
+                        return parse( stream, keyToText );
                     }
-                    catch( IOException e )
+                    catch( final IOException e )
                     {
                         return false;
                     }

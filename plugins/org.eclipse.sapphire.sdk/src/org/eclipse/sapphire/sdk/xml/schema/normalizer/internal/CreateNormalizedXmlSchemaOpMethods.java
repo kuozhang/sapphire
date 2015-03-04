@@ -122,37 +122,28 @@ public final class CreateNormalizedXmlSchemaOpMethods
             final IFile sourceSchemaFile = wsroot.getFile( PathBridge.create( sourceSchemaFilePath ) );
             final IFile targetSchemaFile = operation.getFile().target();
             
-            try
+            try( final InputStream sourceSchemaFileInputStream = sourceSchemaFile.getContents() )
             {
-                final InputStream sourceSchemaFileInputStream = sourceSchemaFile.getContents();
+                targetSchemaFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
                 
-                try
+                create( targetSchemaFile.getParent() );
+                
+                if( targetSchemaFile.exists() )
                 {
-                    targetSchemaFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
-                    
-                    create( targetSchemaFile.getParent() );
-                    
-                    if( targetSchemaFile.exists() )
-                    {
-                        targetSchemaFile.setContents( sourceSchemaFileInputStream, IFile.FORCE, null );
-                    }
-                    else
-                    {
-                        targetSchemaFile.create( sourceSchemaFileInputStream, IFile.FORCE, null );
-                    }
+                    targetSchemaFile.setContents( sourceSchemaFileInputStream, IFile.FORCE, null );
                 }
-                finally
+                else
                 {
-                    try
-                    {
-                        sourceSchemaFileInputStream.close();
-                    }
-                    catch( IOException e ) {}
+                    targetSchemaFile.create( sourceSchemaFileInputStream, IFile.FORCE, null );
                 }
             }
-            catch( CoreException e )
+            catch( final CoreException e )
             {
                 return StatusBridge.create( e.getStatus() );
+            }
+            catch( final IOException e )
+            {
+                return Status.createErrorStatus( e );
             }
             
             monitor.worked( 1 );

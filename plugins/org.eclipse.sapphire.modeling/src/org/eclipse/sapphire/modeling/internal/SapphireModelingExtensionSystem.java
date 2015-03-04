@@ -14,7 +14,6 @@ package org.eclipse.sapphire.modeling.internal;
 import static org.eclipse.sapphire.Result.failure;
 import static org.eclipse.sapphire.Result.success;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
@@ -202,44 +201,31 @@ public final class SapphireModelingExtensionSystem
     
     private static Element parse( final URL url )
     {
-        try
+        try( final InputStream in = url.openStream() )
         {
-            final InputStream in = url.openStream();
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-            try
-            {
-                final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setValidating( false );
+            factory.setNamespaceAware( true );
+            factory.setIgnoringComments( false );
 
-                factory.setValidating( false );
-                factory.setNamespaceAware( true );
-                factory.setIgnoringComments( false );
+            final DocumentBuilder docbuilder = factory.newDocumentBuilder();
 
-                final DocumentBuilder docbuilder = factory.newDocumentBuilder();
-
-                docbuilder.setEntityResolver
-                (
-                    new EntityResolver()
-                    {
-                        public InputSource resolveEntity( final String publicID,
-                                                          final String systemID )
-                        {
-                            return new InputSource( new StringReader( "" ) );
-                        }
-                    }
-                );
-
-                final Document document = docbuilder.parse( in );
-
-                return document.getDocumentElement();
-            }
-            finally
-            {
-                try
+            docbuilder.setEntityResolver
+            (
+                new EntityResolver()
                 {
-                    in.close();
+                    public InputSource resolveEntity( final String publicID,
+                                                      final String systemID )
+                    {
+                        return new InputSource( new StringReader( "" ) );
+                    }
                 }
-                catch( IOException e ) {}
-            }
+            );
+
+            final Document document = docbuilder.parse( in );
+
+            return document.getDocumentElement();
         }
         catch( Exception e )
         {

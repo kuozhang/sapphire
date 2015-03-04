@@ -14,7 +14,6 @@ package org.eclipse.sapphire.modeling.xml.dtd;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.readTextContent;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
@@ -43,28 +42,14 @@ public final class DtdParser
 
     public static XmlDocumentSchema parse( final URL url )
     {
-        InputStream in = null;
-        
-        try
+        try( final InputStream in = url.openStream() )
         {
-            in = url.openStream();
             return parse( readTextContent( in ) );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
             final String message = parseFailed.format( url );
             throw new RuntimeException( message, e );
-        }
-        finally
-        {
-            if( in != null )
-            {
-                try
-                {
-                    in.close();
-                }
-                catch( IOException e ) {}
-            }
         }
     }
     

@@ -13,8 +13,6 @@ package org.eclipse.sapphire.sdk.extensibility.internal;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -698,37 +696,14 @@ public final class ExtensionSummaryExportOpMethods
                     
                     if( url != null )
                     {
-                        final InputStream in = url.openStream();
-                        
-                        try
+                        try( final Reader reader = new InputStreamReader( url.openStream(), UTF_8 ) )
                         {
-                            final Reader reader = new InputStreamReader( in, UTF_8 );
+                            final char[] chars = new char[ 1024 ];
                             
-                            try
+                            for( int count = reader.read( chars ); count != -1; count = reader.read( chars ) )
                             {
-                                final char[] chars = new char[ 1024 ];
-                                
-                                for( int count = reader.read( chars ); count != -1; count = reader.read( chars ) )
-                                {
-                                    buf.append( chars, 0, count );
-                                }
+                                buf.append( chars, 0, count );
                             }
-                            finally
-                            {
-                                try
-                                {
-                                    reader.close();
-                                }
-                                catch( IOException e ) {}
-                            }
-                        }
-                        finally
-                        {
-                            try
-                            {
-                                in.close();
-                            }
-                            catch( IOException e ) {}
                         }
                     }
                 }

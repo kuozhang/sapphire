@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui.internal;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -310,9 +309,7 @@ public final class ExportModelDocumentationOpMethods
                     
                     if( url != null )
                     {
-                        final InputStream in = url.openStream();
-                        
-                        try
+                        try( final InputStream in = url.openStream() )
                         {
                             final Reader reader = new InputStreamReader( in, UTF_8 );
                             final char[] chars = new char[ 1024 ];
@@ -321,14 +318,6 @@ public final class ExportModelDocumentationOpMethods
                             {
                                 buf.append( chars, 0, count );
                             }
-                        }
-                        finally
-                        {
-                            try
-                            {
-                                in.close();
-                            }
-                            catch( IOException e ) {}
                         }
                     }
                 }

@@ -15,7 +15,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -112,47 +111,32 @@ public final class ZipCodeRepository
         final URL zipCodesRepositoryUrl
             = FileLocator.find( SapphireSamplesPlugin.getBundle(), new Path( "zipcodes/zipcodes.txt" ), null );
         
-        try
+        try( final BufferedReader r = new BufferedReader( new InputStreamReader( zipCodesRepositoryUrl.openStream(), UTF_8 ) ) )
         {
-            final InputStream in = zipCodesRepositoryUrl.openStream();
-            
-            try
+            for( String line = r.readLine(); line != null; line = r.readLine() )
             {
-                final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF_8 ) );
+                final String[] segments = line.split( "\\|\\|" );
                 
-                for( String line = r.readLine(); line != null; line = r.readLine() )
+                if( segments.length == 6 )
                 {
-                    final String[] segments = line.split( "\\|\\|" );
+                    final String zipCode = segments[ 0 ];
+                    final String stateCode = segments[ 3 ];
+                    final String city = segments[ 4 ];
+                    final String county = segments[ 5 ];
                     
-                    if( segments.length == 6 )
-                    {
-                        final String zipCode = segments[ 0 ];
-                        final String stateCode = segments[ 3 ];
-                        final String city = segments[ 4 ];
-                        final String county = segments[ 5 ];
-                        
-                        final ZipCodeRecord record = new ZipCodeRecord( zipCode, stateCode, county, city );
-                        
-                        addToIndex( new IndexKey( null, null, null ), record );
-                        addToIndex( new IndexKey( record.getZipCode(), null, null ), record );
-                        addToIndex( new IndexKey( null, record.getStateCode(), null ), record );
-                        addToIndex( new IndexKey( null, null, record.getCity() ), record );
-                        addToIndex( new IndexKey( record.getZipCode(), record.getStateCode(), null ), record );
-                        addToIndex( new IndexKey( record.getZipCode(), null, record.getCity() ), record );
-                        addToIndex( new IndexKey( null, record.getStateCode(), record.getCity() ), record );
-                    }
+                    final ZipCodeRecord record = new ZipCodeRecord( zipCode, stateCode, county, city );
+                    
+                    addToIndex( new IndexKey( null, null, null ), record );
+                    addToIndex( new IndexKey( record.getZipCode(), null, null ), record );
+                    addToIndex( new IndexKey( null, record.getStateCode(), null ), record );
+                    addToIndex( new IndexKey( null, null, record.getCity() ), record );
+                    addToIndex( new IndexKey( record.getZipCode(), record.getStateCode(), null ), record );
+                    addToIndex( new IndexKey( record.getZipCode(), null, record.getCity() ), record );
+                    addToIndex( new IndexKey( null, record.getStateCode(), record.getCity() ), record );
                 }
-            }
-            finally
-            {
-                try
-                {
-                    in.close();
-                }
-                catch( IOException e ) {}
             }
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
             SapphireSamplesPlugin.log( e );
         }

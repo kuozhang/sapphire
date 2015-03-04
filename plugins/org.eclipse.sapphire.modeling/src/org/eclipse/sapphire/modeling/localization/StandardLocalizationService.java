@@ -109,27 +109,15 @@ public abstract class StandardLocalizationService
     
     protected abstract boolean load( Locale locale, Map<String,String> keyToText );
     
-    protected static final boolean parse( final InputStream in,
-                                          final Map<String,String> keyToText )
+    protected static final boolean parse( final InputStream in, final Map<String,String> keyToText )
     {
         final Properties props = new Properties();
         
         try
         {
-            try
-            {
-                props.load( in );
-            }
-            finally
-            {
-                try
-                {
-                    in.close();
-                }
-                catch( IOException e ) {}
-            }
+            props.load( in );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
             return false;
         }

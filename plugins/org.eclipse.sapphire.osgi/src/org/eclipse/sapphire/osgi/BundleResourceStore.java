@@ -102,24 +102,11 @@ public class BundleResourceStore extends UrlResourceStore
                     
                     if( resFileUrl != null )
                     {
-                        try
+                        try( final InputStream stream = resFileUrl.openStream() )
                         {
-                            final InputStream stream = resFileUrl.openStream();
-                            
-                            try
-                            {
-                                return parse( stream, keyToText );
-                            }
-                            finally
-                            {
-                                try
-                                {
-                                    stream.close();
-                                }
-                                catch( IOException e ) {}
-                            }
+                            return parse( stream, keyToText );
                         }
-                        catch( IOException e )
+                        catch( final IOException e )
                         {
                             return false;
                         }

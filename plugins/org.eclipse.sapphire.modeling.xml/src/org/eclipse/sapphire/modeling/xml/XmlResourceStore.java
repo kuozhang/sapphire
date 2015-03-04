@@ -69,22 +69,11 @@ public class XmlResourceStore extends ResourceStore
             {
                 byte[] contents = this.base.getContents();
                 
-                if ( contents.length > 0 ) 
+                if( contents.length > 0 ) 
                 {
-                    final InputStream in = new ByteArrayInputStream( contents );
-    
-                    try
+                    try( final Reader reader = new InputStreamReader( new ByteArrayInputStream( contents ), UTF_8 ) )
                     {
-                        final Reader reader = new InputStreamReader( in, UTF_8 );
                         this.document = doc( reader );
-                    }
-                    finally
-                    {
-                        try
-                        {
-                            in.close();
-                        }
-                        catch( IOException e ) {}
                     }
                 }
             }

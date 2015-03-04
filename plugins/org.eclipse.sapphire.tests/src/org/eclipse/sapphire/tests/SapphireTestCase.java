@@ -15,7 +15,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
@@ -93,16 +92,10 @@ public abstract class SapphireTestCase extends Assert
         return in;
     }
     
-    protected final String loadResource( final String name )
-    
-        throws Exception
-        
+    protected final String loadResource( final String name ) throws Exception
     {
-        final InputStream in = loadResourceAsStream( name );
-        
-        try
+        try( final BufferedReader r = new BufferedReader( new InputStreamReader( loadResourceAsStream( name ), UTF_8 ) ) )
         {
-            final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF_8 ) );
             final char[] chars = new char[ 1024 ];
             final StringBuilder buf = new StringBuilder();
             
@@ -112,14 +105,6 @@ public abstract class SapphireTestCase extends Assert
             }
             
             return buf.toString();
-        }
-        finally
-        {
-            try
-            {
-                in.close();
-            }
-            catch( IOException e ) {}
         }
     }
     

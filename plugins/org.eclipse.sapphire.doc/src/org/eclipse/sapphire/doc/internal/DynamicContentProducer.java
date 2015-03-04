@@ -215,15 +215,13 @@ public class DynamicContentProducer implements IHelpContentProducer
 
     private static String loadResource( final String name )
     {
-        final InputStream in = DynamicContentProducer.class.getClassLoader().getResourceAsStream( name );
-
-        if( in == null )
+        try( final InputStream in = DynamicContentProducer.class.getClassLoader().getResourceAsStream( name ) )
         {
-            throw new IllegalArgumentException( name );
-        }
+            if( in == null )
+            {
+                throw new IllegalArgumentException( name );
+            }
 
-        try
-        {
             final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF_8 ) );
             final char[] chars = new char[ 1024 ];
             final StringBuilder buf = new StringBuilder();
@@ -235,17 +233,9 @@ public class DynamicContentProducer implements IHelpContentProducer
 
             return buf.toString();
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
             throw new RuntimeException( e );
-        }
-        finally
-        {
-            try
-            {
-                in.close();
-            }
-            catch( IOException e ) {}
         }
     }
 

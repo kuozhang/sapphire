@@ -75,28 +75,15 @@ public final class Sapphire
             {
                 while( itr.hasMoreElements() && version == null )
                 {
-                    InputStream stream = null;
                     Manifest manifest = null;
                     
-                    try
+                    try( final InputStream stream = itr.nextElement().openStream() )
                     {
-                        stream = itr.nextElement().openStream();
                         manifest = new Manifest( stream );
                     }
-                    catch( IOException e )
+                    catch( final IOException e )
                     {
                         // Do not actually want to log this as we could be reading some other JAR's corrupted manifest.
-                    }
-                    finally
-                    {
-                        if( stream != null )
-                        {
-                            try
-                            {
-                                stream.close();
-                            }
-                            catch( IOException e ) {}
-                        }
                     }
                     
                     if( manifest != null )

@@ -15,7 +15,6 @@
 package org.eclipse.sapphire.modeling.xml.schema;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
@@ -542,38 +541,20 @@ public final class XmlDocumentSchemaParser
             throw new RuntimeException( e );
         }
 
-        try
+        try( final InputStream in = url.openStream() )
         {
-            InputStream in = null;
+            final Document doc = docbuilder.parse( in );
             
-            try
+            if( doc != null )
             {
-                in = url.openStream();
-
-                final Document doc = docbuilder.parse( in );
-                
-                if( doc != null )
-                {
-                    return doc.getDocumentElement();
-                }
-            }
-            finally
-            {
-                if( in != null )
-                {
-                    try
-                    {
-                        in.close();
-                    }
-                    catch( IOException e ) {}
-                }
+                return doc.getDocumentElement();
             }
         }
-        catch( FileNotFoundException e )
+        catch( final FileNotFoundException e )
         {
             return null;
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
             final String message = parseFailed.format( url.toString() );
             Sapphire.service( LoggingService.class ).logError( message, e );

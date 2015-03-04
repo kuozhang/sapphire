@@ -45,28 +45,19 @@ public class WorkspaceFileResourceStore extends ByteArrayResourceStore
         
         if( this.file.exists() )
         {
-            InputStream in = null;
+            this.modStamp = this.file.getModificationStamp();
             
-            try
+            try( final InputStream in = this.file.getContents() )
             {
-                this.modStamp = this.file.getModificationStamp();
-                in = this.file.getContents();
                 setContents( in );
             }
-            catch( CoreException e )
+            catch( final CoreException e )
             {
                 throw new ResourceStoreException( e );
             }
-            finally
+            catch( final IOException e )
             {
-                if( in != null )
-                {
-                    try
-                    {
-                        in.close();
-                    }
-                    catch( IOException e ) {}
-                }
+                throw new ResourceStoreException( e );
             }
         }
     }
