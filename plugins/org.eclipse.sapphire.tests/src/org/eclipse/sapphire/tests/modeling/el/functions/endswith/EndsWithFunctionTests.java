@@ -33,9 +33,7 @@ public final class EndsWithFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.EndsWith( 'defg' ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.EndsWith( 'defg' ) }" ).evaluate( context ) )
         {
             assertEquals( false, fr.value() );
             
@@ -50,10 +48,6 @@ public final class EndsWithFunctionTests extends TestExpr
 
             element.setValue( "defg" );
             assertEquals( true, fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

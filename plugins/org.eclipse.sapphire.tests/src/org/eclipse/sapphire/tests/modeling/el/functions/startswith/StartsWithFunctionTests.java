@@ -33,9 +33,7 @@ public final class StartsWithFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.StartsWith( 'abc' ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.StartsWith( 'abc' ) }" ).evaluate( context ) )
         {
             assertEquals( false, fr.value() );
             
@@ -47,10 +45,6 @@ public final class StartsWithFunctionTests extends TestExpr
 
             element.setValue( "abcdefg" );
             assertEquals( true, fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

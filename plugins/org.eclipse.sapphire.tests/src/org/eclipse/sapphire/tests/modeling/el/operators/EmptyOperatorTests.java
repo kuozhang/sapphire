@@ -60,9 +60,7 @@ public final class EmptyOperatorTests extends AbstractOperatorTests
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ empty ChildElement }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ empty ChildElement }" ).evaluate( context ) )
         {
             assertEquals( Boolean.TRUE, fr.value() );
             
@@ -71,10 +69,6 @@ public final class EmptyOperatorTests extends AbstractOperatorTests
             
             element.getChildElement().clear();
             assertEquals( Boolean.TRUE, fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

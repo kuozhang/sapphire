@@ -33,9 +33,7 @@ public final class MatchesFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Matches( '[a-z][a-z0-9]*' ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Matches( '[a-z][a-z0-9]*' ) }" ).evaluate( context ) )
         {
             assertEquals( false, fr.value() );
             
@@ -50,10 +48,6 @@ public final class MatchesFunctionTests extends TestExpr
 
             element.setValue( "2a" );
             assertEquals( false, fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

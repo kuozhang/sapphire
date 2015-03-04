@@ -35,9 +35,7 @@ public final class MessageFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Validation.Message }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Validation.Message }" ).evaluate( context ) )
         {
             assertEquals( "ok", fr.value() );
             
@@ -50,10 +48,6 @@ public final class MessageFunctionTests extends TestExpr
             element.setIntegerValue( 4 );
             assertEquals( "ok", fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
     }
     
     @Test
@@ -63,18 +57,12 @@ public final class MessageFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Message( null ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Message( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Message does not accept nulls in position 0.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     
@@ -85,18 +73,12 @@ public final class MessageFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Message( 'abc' ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Message( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Message( java.lang.String ) is undefined.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     

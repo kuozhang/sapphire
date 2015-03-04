@@ -353,13 +353,15 @@ public class DiagramConnectionTemplate extends SapphirePart
         String endpoint1Value = null;
         IDiagramConnectionEndpointBindingDef srcAnchorDef = this.bindingDef.getEndpoint1().content();
         Value<Function> srcFunc = srcAnchorDef.getValue();
-        FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc, 
-                                this.bindingDef.adapt( LocalizationService.class ));
-        if (srcFuncResult != null)
+        
+        try( final FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc, this.bindingDef.adapt( LocalizationService.class )) )
         {
-            endpoint1Value = (String)srcFuncResult.value();
-            srcFuncResult.dispose();            
+            if (srcFuncResult != null)
+            {
+                endpoint1Value = (String)srcFuncResult.value();
+            }
         }
+        
         if (endpoint1Value == null || endpoint1Value.length() == 0)
         {
             endpoint1Value = srcNode.getId();
@@ -372,14 +374,15 @@ public class DiagramConnectionTemplate extends SapphirePart
         String endpoint2Value = null;
         IDiagramConnectionEndpointBindingDef targetAnchorDef = this.bindingDef.getEndpoint2().content();
         Value<Function> targetFunc = targetAnchorDef.getValue();;
-        FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc,
-                                this.bindingDef.adapt( LocalizationService.class ));
         
-        if (targetFuncResult != null)
+        try( final FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc, this.bindingDef.adapt( LocalizationService.class )) )
         {
-            endpoint2Value = (String)targetFuncResult.value();
-            targetFuncResult.dispose();
+            if (targetFuncResult != null)
+            {
+                endpoint2Value = (String)targetFuncResult.value();
+            }
         }
+        
         if (endpoint2Value == null || endpoint2Value.length() == 0)
         {
             endpoint2Value = targetNode.getId();
@@ -575,7 +578,6 @@ public class DiagramConnectionTemplate extends SapphirePart
         
         if( f != null )
         {
-            
             f = FailSafeFunction.create( f, Literal.create( String.class ) );
             fr = f.evaluate( new ModelElementFunctionContext( nodePart.getLocalModelElement(), ls ));
         }

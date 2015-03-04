@@ -48,9 +48,7 @@ public final class PartValidationFunctionTests extends TestExpr
                 part.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
                 part.initialize();
                 
-                final FunctionResult fr = ExpressionLanguageParser.parse( "${ Part.Validation }" ).evaluate( new PartFunctionContext( part, element ) );
-                
-                try
+                try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Part.Validation }" ).evaluate( new PartFunctionContext( part, element ) ) )
                 {
                     assertInstanceOf( fr.value(), Status.class );
                     assertEquals( Status.Severity.ERROR, ( (Status) fr.value() ).severity() );
@@ -60,11 +58,6 @@ public final class PartValidationFunctionTests extends TestExpr
                     assertInstanceOf( fr.value(), Status.class );
                     assertEquals( Status.Severity.OK, ( (Status) fr.value() ).severity() );
                 }
-                finally
-                {
-                    fr.dispose();
-                }
-                
             }
             finally
             {

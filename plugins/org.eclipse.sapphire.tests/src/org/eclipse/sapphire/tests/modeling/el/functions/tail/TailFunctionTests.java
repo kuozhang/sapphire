@@ -33,9 +33,7 @@ public final class TailFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Tail( 3 ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Tail( 3 ) }" ).evaluate( context ) )
         {
             assertEquals( "", fr.value() );
             
@@ -45,14 +43,8 @@ public final class TailFunctionTests extends TestExpr
             element.setValue( "abcdefg" );
             assertEquals( "efg", fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
         
-        fr = ExpressionLanguageParser.parse( "${ Value.Tail( 0 ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Tail( 0 ) }" ).evaluate( context ) )
         {
             element.setValue( null );
             assertEquals( "", fr.value() );
@@ -63,14 +55,8 @@ public final class TailFunctionTests extends TestExpr
             element.setValue( "abcdefg" );
             assertEquals( "", fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
         
-        fr = ExpressionLanguageParser.parse( "${ Value.Tail( -3 ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Tail( -3 ) }" ).evaluate( context ) )
         {
             element.setValue( null );
             assertEquals( "", fr.value() );
@@ -80,10 +66,6 @@ public final class TailFunctionTests extends TestExpr
 
             element.setValue( "abcdefg" );
             assertEquals( "", fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

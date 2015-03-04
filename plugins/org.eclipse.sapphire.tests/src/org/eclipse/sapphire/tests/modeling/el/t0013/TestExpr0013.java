@@ -125,19 +125,20 @@ public final class TestExpr0013 extends TestExpr
         testForExpectedError( context, "${ Max( List1, 'Element1' ) }", "Property TestModelElementA.Element1 is not a value property." );
         testForExpectedError( context, "${ Max( List2 ) }", "Element type TestModelElementB does not contain a value property." );
         
-        final FunctionResult result = ExpressionLanguageParser.parse( "${ Max( List1, 'Value1' ) }" ).evaluate( context );
-
-        assertEquals( new BigDecimal( "3.5" ), result.value() );
-        
-        list.get( 0 ).setValue1( "2" );
-        list.get( 1 ).setValue1( "3.5" );
-        
-        assertEquals( new BigDecimal( "3.5" ), result.value() );
-        
-        a = list.insert();
-        a.setValue1( "5.2" );
-        
-        assertEquals( new BigDecimal( "5.2" ), result.value() );
+        try( final FunctionResult result = ExpressionLanguageParser.parse( "${ Max( List1, 'Value1' ) }" ).evaluate( context ) )
+        {
+            assertEquals( new BigDecimal( "3.5" ), result.value() );
+            
+            list.get( 0 ).setValue1( "2" );
+            list.get( 1 ).setValue1( "3.5" );
+            
+            assertEquals( new BigDecimal( "3.5" ), result.value() );
+            
+            a = list.insert();
+            a.setValue1( "5.2" );
+            
+            assertEquals( new BigDecimal( "5.2" ), result.value() );
+        }
     }
     
     private static final class TestFunctionContext extends FunctionContext

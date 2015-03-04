@@ -34,9 +34,7 @@ public final class ContentFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Content }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Content }" ).evaluate( context ) )
         {
             assertNull( fr.value() );
             
@@ -46,14 +44,8 @@ public final class ContentFunctionTests extends TestExpr
             element.setIntegerValue( "abc" );
             assertNull( fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
 
-        fr = ExpressionLanguageParser.parse( "${ IntegerValueWithDefault.Content }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValueWithDefault.Content }" ).evaluate( context ) )
         {
             assertEquals( 1, fr.value() );
             
@@ -63,23 +55,13 @@ public final class ContentFunctionTests extends TestExpr
             element.setIntegerValueWithDefault( "abc" );
             assertEquals( 1, fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
 
-        fr = ExpressionLanguageParser.parse( "${ Transient.Content }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Transient.Content }" ).evaluate( context ) )
         {
             assertNull( fr.value() );
             
             element.setTransient( this );
             assertSame( this, fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     
@@ -90,18 +72,12 @@ public final class ContentFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( null ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Content does not accept nulls in position 0.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     
@@ -112,18 +88,12 @@ public final class ContentFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( 'abc' ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Content( java.lang.String ) is undefined.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

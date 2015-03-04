@@ -34,9 +34,7 @@ public final class SeverityFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Validation.Severity }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Validation.Severity }" ).evaluate( context ) )
         {
             assertEquals( Status.Severity.OK, fr.value() );
             
@@ -49,10 +47,6 @@ public final class SeverityFunctionTests extends TestExpr
             element.setIntegerValue( 4 );
             assertEquals( Status.Severity.OK, fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
     }
     
     @Test
@@ -62,18 +56,12 @@ public final class SeverityFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( null ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Severity does not accept nulls in position 0.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     
@@ -84,18 +72,12 @@ public final class SeverityFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( 'abc' ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Severity( java.lang.String ) is undefined.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

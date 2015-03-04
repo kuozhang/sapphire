@@ -32,9 +32,7 @@ public final class GlobalFunctionTests extends TestExpr
     {
         Sapphire.global().remove( "Test" );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Global.Test }" ).evaluate( new FunctionContext() );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Global.Test }" ).evaluate( new FunctionContext() ) )
         {
             assertNull( fr.value() );
             
@@ -49,10 +47,6 @@ public final class GlobalFunctionTests extends TestExpr
             Sapphire.global().remove( "Test" );
             
             assertNull( fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

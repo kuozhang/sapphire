@@ -38,9 +38,8 @@ public final class IndexFunctionTests extends TestExpr
         {
             final Element entry = element.getList().insert();
             final FunctionContext context = new ModelElementFunctionContext( entry );
-            final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context );
             
-            try
+            try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
             {
                 assertEquals( 0, fr.value() );
                 
@@ -59,10 +58,6 @@ public final class IndexFunctionTests extends TestExpr
                 element.getList().remove( 0 );
                 assertEquals( 0, fr.value() );
             }
-            finally
-            {
-                fr.dispose();
-            }
         }
         finally
         {
@@ -79,18 +74,13 @@ public final class IndexFunctionTests extends TestExpr
         try
         {
             final FunctionContext context = new ModelElementFunctionContext( element );
-            final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context );
             
-            try
+            try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
             {
                 final Status st = fr.status();
                 
                 assertEquals( Status.Severity.ERROR, st.severity() );
                 assertEquals( "Cannot determine index if parent is not a list.", st.message() );
-            }
-            finally
-            {
-                fr.dispose();
             }
         }
         finally
@@ -109,18 +99,13 @@ public final class IndexFunctionTests extends TestExpr
         {
             final Element child = element.getElement().content( true );
             final FunctionContext context = new ModelElementFunctionContext( child );
-            final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context );
             
-            try
+            try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
             {
                 final Status st = fr.status();
                 
                 assertEquals( Status.Severity.ERROR, st.severity() );
                 assertEquals( "Cannot determine index if parent is not a list.", st.message() );
-            }
-            finally
-            {
-                fr.dispose();
             }
         }
         finally

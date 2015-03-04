@@ -39,7 +39,7 @@ import org.eclipse.sapphire.modeling.Status;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class FunctionResult implements Disposable
+public abstract class FunctionResult implements Disposable, AutoCloseable
 {
     @Text( "Cannot convert {0} to {1}." )
     private static LocalizableText cannotCastMessage;
@@ -324,6 +324,12 @@ public abstract class FunctionResult implements Disposable
             
             this.properties.clear();
         }
+    }
+    
+    @Override
+    public final void close()
+    {
+        dispose();
     }
     
     protected final <X> X cast( Object obj,

@@ -34,9 +34,7 @@ public final class TextFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Text }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Text }" ).evaluate( context ) )
         {
             assertNull( fr.value() );
             
@@ -46,14 +44,8 @@ public final class TextFunctionTests extends TestExpr
             element.setIntegerValue( "abc" );
             assertEquals( "abc", fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
 
-        fr = ExpressionLanguageParser.parse( "${ IntegerValueWithDefault.Text }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValueWithDefault.Text }" ).evaluate( context ) )
         {
             assertEquals( "1", fr.value() );
             
@@ -62,10 +54,6 @@ public final class TextFunctionTests extends TestExpr
 
             element.setIntegerValueWithDefault( "abc" );
             assertEquals( "abc", fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     
@@ -76,18 +64,12 @@ public final class TextFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( null ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Text does not accept nulls in position 0.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     
@@ -98,18 +80,12 @@ public final class TextFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( 'abc' ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Text( java.lang.String ) is undefined.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

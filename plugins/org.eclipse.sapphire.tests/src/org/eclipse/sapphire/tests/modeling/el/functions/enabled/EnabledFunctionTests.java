@@ -61,9 +61,7 @@ public final class EnabledFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ " + property.name() + ".Enabled }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ " + property.name() + ".Enabled }" ).evaluate( context ) )
         {
             assertFalse( (Boolean) fr.value() );
             
@@ -72,10 +70,6 @@ public final class EnabledFunctionTests extends TestExpr
             
             element.setEnable( false );
             assertFalse( (Boolean) fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     
@@ -86,18 +80,12 @@ public final class EnabledFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Enabled( null ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Enabled( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Enabled does not accept nulls in position 0.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
     
@@ -108,18 +96,12 @@ public final class EnabledFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Enabled( 'abc' ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Enabled( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
             assertEquals( "Function Enabled( java.lang.String ) is undefined.", st.message() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

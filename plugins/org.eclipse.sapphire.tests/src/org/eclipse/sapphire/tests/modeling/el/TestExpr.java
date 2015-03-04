@@ -44,15 +44,9 @@ public abstract class TestExpr extends SapphireTestCase
                                                 final Function expr,
                                                 final Object expected )
     {
-        final FunctionResult result = expr.evaluate( context );
-        
-        try
+        try( final FunctionResult result = expr.evaluate( context ) )
         {
             assertEquals( expected, result.value() );
-        }
-        finally
-        {
-            result.dispose();
         }
     }
     
@@ -67,22 +61,13 @@ public abstract class TestExpr extends SapphireTestCase
                                                 final String expr,
                                                 final String expected )
     {
-        try
+        try( final FunctionResult result = ExpressionLanguageParser.parse( expr ).evaluate( context ) )
         {
-            final FunctionResult result = ExpressionLanguageParser.parse( expr ).evaluate( context );
-            
-            try
-            {
-                final Status status = result.status();
-                assertEquals( Status.Severity.ERROR, status.severity() );
-                assertEquals( expected, status.message() );
-            }
-            finally
-            {
-                result.dispose();
-            }
+            final Status status = result.status();
+            assertEquals( Status.Severity.ERROR, status.severity() );
+            assertEquals( expected, status.message() );
         }
-        catch( FunctionException e )
+        catch( final FunctionException e )
         {
             assertEquals( expected, e.getMessage() );
         }

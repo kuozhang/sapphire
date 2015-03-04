@@ -33,9 +33,7 @@ public final class FragmentFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Fragment( 0, 3 ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Fragment( 0, 3 ) }" ).evaluate( context ) )
         {
             assertEquals( "", fr.value() );
             
@@ -45,14 +43,8 @@ public final class FragmentFunctionTests extends TestExpr
             element.setValue( "abcdefg" );
             assertEquals( "abc", fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
 
-        fr = ExpressionLanguageParser.parse( "${ Value.Fragment( 3, 6 ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Fragment( 3, 6 ) }" ).evaluate( context ) )
         {
             element.setValue( null );
             assertEquals( "", fr.value() );
@@ -63,14 +55,8 @@ public final class FragmentFunctionTests extends TestExpr
             element.setValue( "abcdefg" );
             assertEquals( "def", fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
 
-        fr = ExpressionLanguageParser.parse( "${ Value.Fragment( 6, 3 ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Fragment( 6, 3 ) }" ).evaluate( context ) )
         {
             element.setValue( null );
             assertEquals( "", fr.value() );
@@ -81,14 +67,8 @@ public final class FragmentFunctionTests extends TestExpr
             element.setValue( "abcdefg" );
             assertEquals( "", fr.value() );
         }
-        finally
-        {
-            fr.dispose();
-        }
 
-        fr = ExpressionLanguageParser.parse( "${ Value.Fragment( -3, 3 ) }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Fragment( -3, 3 ) }" ).evaluate( context ) )
         {
             element.setValue( null );
             assertEquals( "", fr.value() );
@@ -98,10 +78,6 @@ public final class FragmentFunctionTests extends TestExpr
 
             element.setValue( "abcdefg" );
             assertEquals( "abc", fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

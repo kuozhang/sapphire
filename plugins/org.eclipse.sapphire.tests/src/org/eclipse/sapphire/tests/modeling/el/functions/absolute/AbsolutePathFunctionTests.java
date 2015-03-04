@@ -36,18 +36,12 @@ public final class AbsolutePathFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Path.Absolute }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Path.Absolute }" ).evaluate( context ) )
         {
             assertNull( fr.value() );
             
             element.setPath( "abc/file.txt" );
             assertEquals( ( new Path( new File( "" ).getCanonicalPath() ) ).append( "abc/file.txt" ), fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

@@ -33,9 +33,7 @@ public final class EncodeToXmlFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.EncodeToXml }" ).evaluate( context );
-        
-        try
+        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.EncodeToXml }" ).evaluate( context ) )
         {
             assertEquals( "", fr.value() );
             
@@ -47,10 +45,6 @@ public final class EncodeToXmlFunctionTests extends TestExpr
 
             element.setValue( "<>&\"'" );
             assertEquals( "&lt;&gt;&amp;&quot;&apos;", fr.value() );
-        }
-        finally
-        {
-            fr.dispose();
         }
     }
 

@@ -51,6 +51,10 @@
 <h1>Enhancements in Sapphire 9</h1>
 
 <ol>
+  <li><a href="#AutoCloseable">AutoCloseable</a></li>
+  <ol type="A">
+    <li><a href="#AutoCloseable-FunctionResult">FunctionResult</a></li>
+  </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-TransparentReferenceSetting">Transparent Reference Setting</a></li>
@@ -66,6 +70,16 @@
     <li><a href="#DiagramPaletteImage">Diagram Editor Palette Icons</a></li>
   </ol>  
 </ol>
+
+
+<h2><a name="AutoCloseable"><a name="AutoCloseable-FunctionResult">FunctionResult is AutoCloseable</a></a></h2>
+
+<p>Taking advantage of Java 7, FunctionResult now implements AutoCloseable, so it can be used in the try-with-resources construct.</p>
+
+<pre class="source-code"><code>try( final FunctionResult fr = ExpressionLanguageParser.parse( expr ).evaluate( context ) )
+{
+    ...
+}</code></pre>
 
 
 <h2><a name="Core"><a name="Core-TransparentReferenceSetting">Transparent Reference Setting</a></a></h2>

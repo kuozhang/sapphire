@@ -36,15 +36,10 @@ public final class ThisPropertyTests extends TestExpr
         try
         {
             final FunctionContext context = new ModelElementFunctionContext( element );
-            final FunctionResult fr = ExpressionLanguageParser.parse( "${ This }" ).evaluate( context );
             
-            try
+            try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ This }" ).evaluate( context ) )
             {
                 assertSame( element, fr.value() );
-            }
-            finally
-            {
-                fr.dispose();
             }
         }
         finally
