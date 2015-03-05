@@ -40,7 +40,7 @@
       	<echo message="Building Sapphire releng Ant library..."/>
         <delete dir="${.classes.dir}" quiet="true"/>
         <mkdir dir="${.classes.dir}"/>
-        <javac debug="true" destdir="${.classes.dir}" source="1.5" target="1.5">
+        <javac debug="true" destdir="${.classes.dir}" source="1.8" target="1.8">
           <src path="${.src.dir}"/>
         </javac>
         <jar destfile="${.antlib.jar}">
