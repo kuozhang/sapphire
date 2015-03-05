@@ -29,7 +29,7 @@ import org.eclipse.sapphire.ui.forms.swt.SwtResourceCache;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public interface ISapphirePart extends Disposable
+public interface ISapphirePart extends Disposable, AutoCloseable
 {
     ISapphirePart parent();
     <T> T nearest( final Class<T> partType );
@@ -50,5 +50,8 @@ public interface ISapphirePart extends Disposable
     
     <S extends Service> S service( Class<S> serviceType );
     <S extends Service> List<S> services( Class<S> serviceType );
+    
+    @Override
+    void close();
     
 }

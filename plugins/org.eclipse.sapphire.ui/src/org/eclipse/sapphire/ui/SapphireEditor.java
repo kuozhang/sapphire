@@ -923,6 +923,13 @@ public abstract class SapphireEditor
     }
     
     @Override
+    
+    public final void close()
+    {
+        dispose();
+    }
+    
+    @Override
     @SuppressWarnings( "rawtypes" )
     
     public Object getAdapter( final Class type ) 

@@ -886,6 +886,13 @@ public abstract class SapphirePart implements ISapphirePart
         }
     }
     
+    @Override
+    
+    public final void close()
+    {
+        dispose();
+    }
+    
     protected final class ImageManager
     {
         private final Function imageFunction;

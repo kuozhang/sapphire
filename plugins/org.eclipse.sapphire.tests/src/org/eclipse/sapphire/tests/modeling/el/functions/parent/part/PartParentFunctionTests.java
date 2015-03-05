@@ -37,9 +37,8 @@ public final class PartParentFunctionTests extends TestExpr
         try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartParentFunctionTests.class ).dialog();
-            final DialogPart dialogPart = new DialogPart();
             
-            try
+            try( final DialogPart dialogPart = new DialogPart() )
             {
                 dialogPart.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
                 dialogPart.initialize();
@@ -50,10 +49,6 @@ public final class PartParentFunctionTests extends TestExpr
                 testForExpectedValue( new PartFunctionContext( propertyEditorPart, element ), "${ Part }", propertyEditorPart );
                 testForExpectedValue( new PartFunctionContext( propertyEditorPart, element ), "${ Part.Parent }", groupPart );
                 testForExpectedValue( new PartFunctionContext( propertyEditorPart, element ), "${ Part.Parent.Parent }", dialogPart );
-            }
-            finally
-            {
-                dialogPart.dispose();
             }
         }
     }

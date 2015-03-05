@@ -39,9 +39,8 @@ public final class PartValidationFunctionTests extends TestExpr
         try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartValidationFunctionTests.class ).dialog();
-            final SapphirePart part = new DialogPart();
             
-            try
+            try( final SapphirePart part = new DialogPart() )
             {
                 part.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
                 part.initialize();
@@ -56,10 +55,6 @@ public final class PartValidationFunctionTests extends TestExpr
                     assertInstanceOf( fr.value(), Status.class );
                     assertEquals( Status.Severity.OK, ( (Status) fr.value() ).severity() );
                 }
-            }
-            finally
-            {
-                part.dispose();
             }
         }
     }
