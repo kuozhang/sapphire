@@ -37,7 +37,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
@@ -46,6 +45,7 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Suspension;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.Presentation;
@@ -403,9 +403,8 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
             if( list != null )
             {
                 final ListFactory<Element> elements = ListFactory.start();
-                final Disposable suspension = list.suspend();
                 
-                try
+                try( final Suspension suspension = list.suspend() )
                 {
                     for( String str : this.input )
                     {
@@ -413,10 +412,6 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
                         element.property( SlushBucketPropertyEditorPresentation.this.memberProperty ).write( str, true );
                         elements.add( element );
                     }
-                }
-                finally
-                {
-                    suspension.dispose();
                 }
                 
                 setSelectedElements( elements.result() );

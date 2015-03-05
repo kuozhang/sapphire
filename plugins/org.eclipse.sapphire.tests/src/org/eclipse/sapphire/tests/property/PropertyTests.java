@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.property;
 
-import org.eclipse.sapphire.Disposable;
+import org.eclipse.sapphire.Suspension;
 import org.eclipse.sapphire.tests.EventLog;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.tests.element.TestElement;
@@ -113,9 +113,7 @@ public final class PropertyTests extends SapphireTestCase
             
             log.clear();
             
-            final Disposable suspension = a.getElement().suspend();
-            
-            try
+            try( final Suspension suspension = a.getElement().suspend() )
             {
                 aa.setValue( "def" );
                 aa.getList().insert().setValue( "ghi" );
@@ -129,10 +127,6 @@ public final class PropertyTests extends SapphireTestCase
                 assertPropertyContentEvent( log.event( 0 ), a.getValue() );
                 
                 log.clear();
-            }
-            finally
-            {
-                suspension.dispose();
             }
             
             assertEquals( 5, log.size() );

@@ -47,7 +47,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
@@ -66,6 +65,7 @@ import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.Suspension;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.Value;
@@ -757,16 +757,10 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
             
             if( this.element == null )
             {
-                final Disposable suspension = list.suspend();
-                
-                try
+                try( final Suspension suspension = list.suspend() )
                 {
                     rebase( list.insert() );
                     this.property.write( this.value, true );
-                }
-                finally
-                {
-                    suspension.dispose();
                 }
             }
             else

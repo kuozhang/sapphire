@@ -55,6 +55,7 @@
   <ol type="A">
     <li><a href="#AutoCloseable-DefinitionLoaderReference">DefinitionLoader.Reference</a></li>
     <li><a href="#AutoCloseable-Element">Element</a></li>
+    <li><a href="#AutoCloseable-EventSuspensionHandle">Event Suspension Handle</a></li>
     <li><a href="#AutoCloseable-FunctionResult">FunctionResult</a></li>
     <li><a href="#AutoCloseable-SapphireCondition">SapphireCondition</a></li>
     <li><a href="#AutoCloseable-SapphirePart">SapphirePart</a></li>
@@ -91,6 +92,22 @@
 <p>Taking advantage of Java 7, Element now extends AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
 <pre class="source-code"><code>try( final ExampleElement example = ExampleElement.TYPE.instantiate() )
+{
+    ...
+}</code></pre>
+
+
+<h2><a name="AutoCloseable-EventSuspensionHandle">Event Suspension Handle is AutoCloseable</a></h2>
+
+<p>Taking advantage of Java 7, the event suspension handle returned from Property.suspend() and Element.suspend() methods now implements
+AutoCloseable, so it can be used in the try-with-resources construct.</p>
+
+<pre class="source-code"><code>try( final Suspension suspension = property.suspend() )
+{
+    ...
+}</code></pre>
+
+<pre class="source-code"><code>try( final Suspension suspension = element.suspend() )
 {
     ...
 }</code></pre>

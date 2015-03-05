@@ -14,8 +14,8 @@ package org.eclipse.sapphire.tests.element;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.ElementData;
+import org.eclipse.sapphire.Suspension;
 import org.eclipse.sapphire.tests.EventLog;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.junit.Test;
@@ -132,9 +132,7 @@ public final class ElementTests extends SapphireTestCase
             
             log.clear();
             
-            final Disposable suspension = aa.suspend();
-            
-            try
+            try( final Suspension suspension = aa.suspend() )
             {
                 aa.setValue( "def" );
                 aa.getList().insert().setValue( "ghi" );
@@ -148,10 +146,6 @@ public final class ElementTests extends SapphireTestCase
                 assertPropertyContentEvent( log.event( 0 ), a.getValue() );
                 
                 log.clear();
-            }
-            finally
-            {
-                suspension.dispose();
             }
             
             assertEquals( 5, log.size() );

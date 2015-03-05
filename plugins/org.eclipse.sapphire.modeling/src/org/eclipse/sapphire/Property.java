@@ -789,14 +789,15 @@ public abstract class Property implements Observable
      * @return a handle that must be used to release the event suspension
      */
     
-    public final Disposable suspend()
+    public final Suspension suspend()
     {
         final JobQueue<EventDeliveryJob> queue = listeners( true ).queue();
-        final Disposable suspension = queue.suspend( new SuspendFilter() );
+        final Suspension suspension = queue.suspend( new SuspendFilter() );
         
-        return new Disposable()
+        return new Suspension()
         {
             @Override
+            
             public void dispose()
             {
                 suspension.dispose();

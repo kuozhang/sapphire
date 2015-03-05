@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
@@ -43,6 +42,7 @@ import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.Suspension;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -363,16 +363,10 @@ public final class CheckBoxGroupPropertyEditorPresentation extends ListPropertyE
                             
                             if( e == null && selection == true )
                             {
-                                final Disposable s = list.suspend();
-                                
-                                try
+                                try( final Suspension s = list.suspend() )
                                 {
                                     e = list.insert();
                                     writeMemberProperty( e, (String) checkbox.getData( "Value" ) );
-                                }
-                                finally
-                                {
-                                    s.dispose();
                                 }
                             }
                             else if( e != null && selection == false )

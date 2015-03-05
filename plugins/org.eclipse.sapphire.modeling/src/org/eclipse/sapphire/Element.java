@@ -229,7 +229,7 @@ public interface Element extends Observable, Disposable, AutoCloseable
      * @return a handle that must be used to release the event suspension
      */
     
-    Disposable suspend();
+    Suspension suspend();
     
     @Override
     void close();

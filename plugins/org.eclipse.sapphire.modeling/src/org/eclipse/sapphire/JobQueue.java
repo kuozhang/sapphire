@@ -134,40 +134,42 @@ public final class JobQueue<T extends Runnable>
      * processing once the suspension is released. 
      * 
      * @param filter the filter
-     * @return a handle that must be disposed to release the suspension
+     * @return a handle that must be closed to release the suspension
      * @throws IllegalArgumentException if the filter is null
      */
     
-    public Disposable suspend( final Filter<T> filter )
+    public Suspension suspend( final Filter<T> filter )
     {
         if( filter == null )
         {
             throw new IllegalArgumentException();
         }
         
-        final DisposableFilter disposable = new DisposableFilter( filter );
+        final SuspensionFilter suspension = new SuspensionFilter( filter );
         
-        this.filters.add( disposable );
+        this.filters.add( suspension );
         
-        return disposable;
+        return suspension;
     }
     
-    private final class DisposableFilter implements Filter<T>, Disposable
+    private final class SuspensionFilter extends Suspension implements Filter<T>
     {
         private final Filter<T> base;
         
-        public DisposableFilter( final Filter<T> base )
+        public SuspensionFilter( final Filter<T> base )
         {
             this.base = base;
         }
 
         @Override
+        
         public boolean allows( final T element )
         {
             return this.base.allows( element );
         }
 
         @Override
+        
         public void dispose()
         {
             JobQueue.this.filters.remove( this );
