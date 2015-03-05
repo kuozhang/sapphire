@@ -56,6 +56,7 @@
     <li><a href="#AutoCloseable-DefinitionLoaderReference">DefinitionLoader.Reference</a></li>
     <li><a href="#AutoCloseable-Element">Element</a></li>
     <li><a href="#AutoCloseable-FunctionResult">FunctionResult</a></li>
+    <li><a href="#AutoCloseable-SapphireCondition">SapphireCondition</a></li>
     <li><a href="#AutoCloseable-SapphirePart">SapphirePart</a></li>
   </ol>
   <li><a href="#Core">Core</a></li>
@@ -110,6 +111,16 @@
 <p>Taking advantage of Java 7, SapphirePart now implements AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
 <pre class="source-code"><code>try( final SapphirePart part = new DialogPart() )
+{
+    ...
+}</code></pre>
+
+
+<h2><a name="AutoCloseable-SapphireCondition">SapphireCondition is AutoCloseable</a></h2>
+
+<p>Taking advantage of Java 7, SapphireCondition now implements AutoCloseable, so it can be used in the try-with-resources construct.</p>
+
+<pre class="source-code"><code>try( final SapphireCondition condition = ... )
 {
     ...
 }</code></pre>

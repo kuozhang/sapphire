@@ -317,17 +317,11 @@ public final class SapphireActionGroup implements Disposable
                 
                 if( conditionClass != null )
                 {
-                    final SapphireCondition condition = SapphireCondition.create( this.part, conditionClass, null );
-                    
-                    if( condition != null )
+                    try( final SapphireCondition condition = SapphireCondition.create( this.part, conditionClass, null ) )
                     {
-                        try
+                        if( condition != null )
                         {
                             return condition.getConditionState();
-                        }
-                        finally
-                        {
-                            condition.dispose();
                         }
                     }
                 }

@@ -22,7 +22,7 @@ import org.eclipse.sapphire.Sapphire;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireCondition implements Disposable
+public abstract class SapphireCondition implements Disposable, AutoCloseable
 {
     private ISapphirePart part;
     private boolean conditionState;
@@ -93,8 +93,16 @@ public abstract class SapphireCondition implements Disposable
     }
     
     @Override
+    
     public void dispose()
     {
+    }
+    
+    @Override
+    
+    public final void close()
+    {
+        dispose();
     }
     
     public final void attach( final Listener listener )
