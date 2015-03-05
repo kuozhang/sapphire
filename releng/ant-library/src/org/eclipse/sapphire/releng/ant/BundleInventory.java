@@ -73,7 +73,7 @@ public final class BundleInventory
     
     public void write( final File f ) throws IOException 
     {
-        try( final BufferedWriter w = new BufferedWriter( new FileWriter( f ) ) )
+        try( BufferedWriter w = new BufferedWriter( new FileWriter( f ) ) )
         {
             for( BundleInfo bundle : this.bundles )
             {
@@ -91,7 +91,7 @@ public final class BundleInventory
     {
         this.bundles.clear();
         
-        try( final BufferedReader r = new BufferedReader( new FileReader( f ) ) )
+        try( BufferedReader r = new BufferedReader( new FileReader( f ) ) )
         {
             for( String line = r.readLine(); line != null; line = r.readLine() )
             {

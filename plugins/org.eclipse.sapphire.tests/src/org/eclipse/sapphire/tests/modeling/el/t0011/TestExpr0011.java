@@ -125,7 +125,7 @@ public final class TestExpr0011 extends TestExpr
         testForExpectedError( context, "${ Avg( List1, 'Element1' ) }", "Property TestModelElementA.Element1 is not a value property." );
         testForExpectedError( context, "${ Avg( List2 ) }", "Element type TestModelElementB does not contain a value property." );
         
-        try( final FunctionResult result = ExpressionLanguageParser.parse( "${ Avg( List1, 'Value1' ) }" ).evaluate( context ) )
+        try( FunctionResult result = ExpressionLanguageParser.parse( "${ Avg( List1, 'Value1' ) }" ).evaluate( context ) )
         {
             assertEquals( new BigDecimal( "2.2" ), result.value() );
             

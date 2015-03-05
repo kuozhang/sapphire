@@ -82,7 +82,7 @@ public final class ListPropertyTests extends SapphireTestCase
     
     public void OrderedPossibleTypes() throws Exception
     {
-        try( final OrderedPossibleTypesTestElement a = OrderedPossibleTypesTestElement.TYPE.instantiate() )
+        try( OrderedPossibleTypesTestElement a = OrderedPossibleTypesTestElement.TYPE.instantiate() )
         {
             final PossibleTypesService unorderedPossibleTypesService = a.getListWithUnorderedPossibleTypes().service( PossibleTypesService.class );
             

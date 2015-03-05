@@ -94,7 +94,7 @@ public abstract class SapphireTestCase extends Assert
     
     protected final String loadResource( final String name ) throws Exception
     {
-        try( final BufferedReader r = new BufferedReader( new InputStreamReader( loadResourceAsStream( name ), UTF_8 ) ) )
+        try( BufferedReader r = new BufferedReader( new InputStreamReader( loadResourceAsStream( name ), UTF_8 ) ) )
         {
             final char[] chars = new char[ 1024 ];
             final StringBuilder buf = new StringBuilder();

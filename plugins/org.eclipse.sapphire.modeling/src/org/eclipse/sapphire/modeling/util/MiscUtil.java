@@ -119,7 +119,7 @@ public class MiscUtil
     
     public static String readTextResource( final ClassLoader cl, final String resourceFullPath )
     {
-        try( final InputStream in = cl.getResourceAsStream( resourceFullPath ) )
+        try( InputStream in = cl.getResourceAsStream( resourceFullPath ) )
         {
             return readTextContent( in );
         }

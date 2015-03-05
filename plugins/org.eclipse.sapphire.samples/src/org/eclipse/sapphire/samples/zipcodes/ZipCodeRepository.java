@@ -111,7 +111,7 @@ public final class ZipCodeRepository
         final URL zipCodesRepositoryUrl
             = FileLocator.find( SapphireSamplesPlugin.getBundle(), new Path( "zipcodes/zipcodes.txt" ), null );
         
-        try( final BufferedReader r = new BufferedReader( new InputStreamReader( zipCodesRepositoryUrl.openStream(), UTF_8 ) ) )
+        try( BufferedReader r = new BufferedReader( new InputStreamReader( zipCodesRepositoryUrl.openStream(), UTF_8 ) ) )
         {
             for( String line = r.readLine(); line != null; line = r.readLine() )
             {

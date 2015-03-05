@@ -34,7 +34,7 @@ public final class ContentFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Content }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Content }" ).evaluate( context ) )
         {
             assertNull( fr.value() );
             
@@ -45,7 +45,7 @@ public final class ContentFunctionTests extends TestExpr
             assertNull( fr.value() );
         }
 
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValueWithDefault.Content }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValueWithDefault.Content }" ).evaluate( context ) )
         {
             assertEquals( 1, fr.value() );
             
@@ -56,7 +56,7 @@ public final class ContentFunctionTests extends TestExpr
             assertEquals( 1, fr.value() );
         }
 
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Transient.Content }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Transient.Content }" ).evaluate( context ) )
         {
             assertNull( fr.value() );
             
@@ -72,7 +72,7 @@ public final class ContentFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( null ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
@@ -88,7 +88,7 @@ public final class ContentFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( 'abc' ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             

@@ -28,7 +28,7 @@ public final class RequiredConstraintTests extends SapphireTestCase
     
     public void testRequiredConstraintValueProperty() throws Exception
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             assertNotNull( element.property( TestElement.PROP_VALUE ).service( RequiredConstraintService.class ) );
             assertNotNull( element.property( TestElement.PROP_VALUE_REQUIRED ).service( RequiredConstraintService.class ) );
@@ -70,7 +70,7 @@ public final class RequiredConstraintTests extends SapphireTestCase
     
     public void testRequiredConstraintElementProperty() throws Exception
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             assertNotNull( element.property( TestElement.PROP_ELEMENT ).service( RequiredConstraintService.class ) );
             assertNotNull( element.property( TestElement.PROP_ELEMENT_REQUIRED ).service( RequiredConstraintService.class ) );

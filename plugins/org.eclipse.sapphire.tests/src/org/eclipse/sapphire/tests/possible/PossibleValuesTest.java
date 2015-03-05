@@ -28,7 +28,7 @@ public final class PossibleValuesTest extends SapphireTestCase
     
     public void testValueWithStaticPossibles()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final PossibleValuesService service = element.getValueWithStaticPossibles().service( PossibleValuesService.class );
             
@@ -52,7 +52,7 @@ public final class PossibleValuesTest extends SapphireTestCase
     
     public void testValueWithModelPossibles()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final ListEntry a = element.getEntries().insert();
             a.setValue( "a" );
@@ -93,7 +93,7 @@ public final class PossibleValuesTest extends SapphireTestCase
     
     public void testListWithStaticPossibles()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final PossibleValuesService service = element.getListWithStaticPossibles().service( PossibleValuesService.class );
             
@@ -119,7 +119,7 @@ public final class PossibleValuesTest extends SapphireTestCase
     
     public void testListWithModelPossibles()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final ListEntry a = element.getEntries().insert();
             a.setValue( "a" );

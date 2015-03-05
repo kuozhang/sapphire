@@ -71,7 +71,7 @@ public class XmlResourceStore extends ResourceStore
                 
                 if( contents.length > 0 ) 
                 {
-                    try( final Reader reader = new InputStreamReader( new ByteArrayInputStream( contents ), UTF_8 ) )
+                    try( Reader reader = new InputStreamReader( new ByteArrayInputStream( contents ), UTF_8 ) )
                     {
                         this.document = doc( reader );
                     }

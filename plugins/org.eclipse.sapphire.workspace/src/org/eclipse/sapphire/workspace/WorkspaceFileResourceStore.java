@@ -47,7 +47,7 @@ public class WorkspaceFileResourceStore extends ByteArrayResourceStore
         {
             this.modStamp = this.file.getModificationStamp();
             
-            try( final InputStream in = this.file.getContents() )
+            try( InputStream in = this.file.getContents() )
             {
                 setContents( in );
             }

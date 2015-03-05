@@ -404,7 +404,7 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
             {
                 final ListFactory<Element> elements = ListFactory.start();
                 
-                try( final Suspension suspension = list.suspend() )
+                try( Suspension suspension = list.suspend() )
                 {
                     for( String str : this.input )
                     {

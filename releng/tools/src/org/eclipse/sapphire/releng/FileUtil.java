@@ -63,7 +63,7 @@ public final class FileUtil
             
             if( file.length() == length )
             {
-                try( final InputStream in = new FileInputStream( file ) )
+                try( InputStream in = new FileInputStream( file ) )
                 {
                     byte[] buffer = new byte[ 4 * 1024 ];
                     int count = 0;
@@ -86,7 +86,7 @@ public final class FileUtil
         
         if( write )
         {
-            try( final OutputStream out = new FileOutputStream( file ) )
+            try( OutputStream out = new FileOutputStream( file ) )
             {
                 out.write( content );
             }

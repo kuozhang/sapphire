@@ -45,7 +45,7 @@ public final class Resource
     
     public String text()
     {
-        try( final Reader reader = new InputStreamReader( this.url.openStream(), "UTF-8" ) )
+        try( Reader reader = new InputStreamReader( this.url.openStream(), "UTF-8" ) )
         {
             final StringBuilder content = new StringBuilder();
             
@@ -72,7 +72,7 @@ public final class Resource
             throw new IllegalArgumentException();
         }
         
-        try( final InputStream in = this.url.openStream() )
+        try( InputStream in = this.url.openStream() )
         {
             FileUtil.write( new File( folder, this.name ), in );
         }

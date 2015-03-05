@@ -32,7 +32,7 @@ public final class ElementTests extends SapphireTestCase
     
     public void HoldsElement() throws Exception
     {
-        try( final TestElement a = TestElement.TYPE.instantiate() )
+        try( TestElement a = TestElement.TYPE.instantiate() )
         {
             final TestElement aa = a.getElement().content( true );
             
@@ -52,7 +52,7 @@ public final class ElementTests extends SapphireTestCase
             assertFalse( aa.holds( ab ) );
             assertFalse( ab.holds( aa ) );
             
-            try( final TestElement b = TestElement.TYPE.instantiate() )
+            try( TestElement b = TestElement.TYPE.instantiate() )
             {
                 assertFalse( a.holds( b ) );
                 assertFalse( b.holds( a ) );
@@ -64,7 +64,7 @@ public final class ElementTests extends SapphireTestCase
     
     public void HoldsProperty() throws Exception
     {
-        try( final TestElement a = TestElement.TYPE.instantiate() )
+        try( TestElement a = TestElement.TYPE.instantiate() )
         {
             assertTrue( a.holds( a.getValue() ) );
             assertTrue( a.holds( a.getTransient() ) );
@@ -102,7 +102,7 @@ public final class ElementTests extends SapphireTestCase
             assertFalse( aa.holds( ab.getElement() ) );
             assertFalse( aa.holds( ab.getList() ) );
     
-            try( final TestElement b = TestElement.TYPE.instantiate() )
+            try( TestElement b = TestElement.TYPE.instantiate() )
             {
                 assertFalse( a.holds( b.getValue() ) );
                 assertFalse( b.holds( a.getValue() ) );
@@ -116,7 +116,7 @@ public final class ElementTests extends SapphireTestCase
     {
         final EventLog log = new EventLog();
         
-        try( final TestElement a = TestElement.TYPE.instantiate() )
+        try( TestElement a = TestElement.TYPE.instantiate() )
         {
             a.attach( log, "*" );
             
@@ -132,7 +132,7 @@ public final class ElementTests extends SapphireTestCase
             
             log.clear();
             
-            try( final Suspension suspension = aa.suspend() )
+            try( Suspension suspension = aa.suspend() )
             {
                 aa.setValue( "def" );
                 aa.getList().insert().setValue( "ghi" );

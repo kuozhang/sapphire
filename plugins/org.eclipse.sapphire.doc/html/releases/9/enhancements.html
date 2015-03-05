@@ -81,7 +81,7 @@
 
 <p>Taking advantage of Java 7, DefinitionLoader.Reference now extends AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
-<pre class="source-code"><code>try( final DefinitionLoader.Reference&lt;DialogDef> def = DefinitionLoader.sdef( getClass() ).dialog() )
+<pre class="source-code"><code>try( DefinitionLoader.Reference&lt;DialogDef> def = DefinitionLoader.sdef( getClass() ).dialog() )
 {
     ...
 }</code></pre>
@@ -91,7 +91,7 @@
 
 <p>Taking advantage of Java 7, Element now extends AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
-<pre class="source-code"><code>try( final ExampleElement example = ExampleElement.TYPE.instantiate() )
+<pre class="source-code"><code>try( ExampleElement example = ExampleElement.TYPE.instantiate() )
 {
     ...
 }</code></pre>
@@ -102,12 +102,12 @@
 <p>Taking advantage of Java 7, the event suspension handle returned from Property.suspend() and Element.suspend() methods now implements
 AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
-<pre class="source-code"><code>try( final Suspension suspension = property.suspend() )
+<pre class="source-code"><code>try( Suspension suspension = property.suspend() )
 {
     ...
 }</code></pre>
 
-<pre class="source-code"><code>try( final Suspension suspension = element.suspend() )
+<pre class="source-code"><code>try( Suspension suspension = element.suspend() )
 {
     ...
 }</code></pre>
@@ -117,7 +117,7 @@ AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
 <p>Taking advantage of Java 7, FunctionResult now implements AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
-<pre class="source-code"><code>try( final FunctionResult fr = ExpressionLanguageParser.parse( expr ).evaluate( context ) )
+<pre class="source-code"><code>try( FunctionResult fr = ExpressionLanguageParser.parse( expr ).evaluate( context ) )
 {
     ...
 }</code></pre>
@@ -127,7 +127,7 @@ AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
 <p>Taking advantage of Java 7, SapphirePart now implements AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
-<pre class="source-code"><code>try( final SapphirePart part = new DialogPart() )
+<pre class="source-code"><code>try( SapphirePart part = new DialogPart() )
 {
     ...
 }</code></pre>
@@ -137,7 +137,7 @@ AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
 <p>Taking advantage of Java 7, SapphireCondition now implements AutoCloseable, so it can be used in the try-with-resources construct.</p>
 
-<pre class="source-code"><code>try( final SapphireCondition condition = ... )
+<pre class="source-code"><code>try( SapphireCondition condition = ... )
 {
     ...
 }</code></pre>

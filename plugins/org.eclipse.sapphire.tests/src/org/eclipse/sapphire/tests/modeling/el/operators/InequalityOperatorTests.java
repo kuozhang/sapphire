@@ -137,7 +137,7 @@ public final class InequalityOperatorTests extends AbstractOperatorTests
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ ChildElement != null }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ ChildElement != null }" ).evaluate( context ) )
         {
             assertEquals( Boolean.FALSE, fr.value() );
             

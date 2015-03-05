@@ -166,7 +166,7 @@ public final class DeclarativeValidationService extends ValidationService
         {
             if( ( (Boolean) this.ruleFunctionResult.value() ) == false )
             {
-                try( final FunctionResult messageFunctionResult = this.messageFunction.evaluate( new ModelElementFunctionContext( this.element ) ) )
+                try( FunctionResult messageFunctionResult = this.messageFunction.evaluate( new ModelElementFunctionContext( this.element ) ) )
                 {
                     return Status.createStatus( this.severity, (String) messageFunctionResult.value() );
                 }

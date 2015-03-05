@@ -34,7 +34,7 @@ public final class SeverityFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Validation.Severity }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Validation.Severity }" ).evaluate( context ) )
         {
             assertEquals( Status.Severity.OK, fr.value() );
             
@@ -56,7 +56,7 @@ public final class SeverityFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( null ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
@@ -72,7 +72,7 @@ public final class SeverityFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( 'abc' ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             

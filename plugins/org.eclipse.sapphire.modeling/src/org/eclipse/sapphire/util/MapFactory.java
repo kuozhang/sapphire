@@ -271,7 +271,7 @@ public final class MapFactory<K,V>
         private final K key;
         private final V value;
         
-        public Entry( final K key, final V value )
+        public Entry( K key, final V value )
         {
             this.key = key;
             this.value = value;

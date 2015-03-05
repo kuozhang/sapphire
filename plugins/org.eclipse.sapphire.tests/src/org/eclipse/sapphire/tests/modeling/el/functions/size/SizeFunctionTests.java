@@ -34,7 +34,7 @@ public final class SizeFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ List.Size }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ List.Size }" ).evaluate( context ) )
         {
             assertEquals( 0, fr.value() );
             
@@ -56,7 +56,7 @@ public final class SizeFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Size }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Size }" ).evaluate( context ) )
         {
             assertEquals( 0, fr.value() );
             
@@ -74,7 +74,7 @@ public final class SizeFunctionTests extends TestExpr
     {
         final FunctionContext context = new FunctionContext();
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( 'abcdef' ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( 'abcdef' ) }" ).evaluate( context ) )
         {
             assertEquals( 6, fr.value() );
         }
@@ -87,7 +87,7 @@ public final class SizeFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( null ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
@@ -103,7 +103,7 @@ public final class SizeFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( 3 ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( 3 ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             

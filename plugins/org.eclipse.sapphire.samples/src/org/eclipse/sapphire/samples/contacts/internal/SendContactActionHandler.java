@@ -32,7 +32,7 @@ public final class SendContactActionHandler extends SapphireActionHandler
     {
         final Contact contact = (Contact) getModelElement();
         
-        try( final SendContactOp operation = SendContactOp.TYPE.instantiate() )
+        try( SendContactOp operation = SendContactOp.TYPE.instantiate() )
         {
             operation.setContact( contact );
             

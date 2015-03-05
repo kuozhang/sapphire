@@ -120,7 +120,7 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 
             Image image = new Image( diagramPresentation.display(), rectangle.width, rectangle.height );
 
-            try( final OutputStream output = new FileOutputStream( filePath ) )
+            try( OutputStream output = new FileOutputStream( filePath ) )
             {
                 GC gc = null;
                 SWTGraphics graphics = null;

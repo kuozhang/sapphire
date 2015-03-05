@@ -354,7 +354,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         IDiagramConnectionEndpointBindingDef srcAnchorDef = this.bindingDef.getEndpoint1().content();
         Value<Function> srcFunc = srcAnchorDef.getValue();
         
-        try( final FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc, this.bindingDef.adapt( LocalizationService.class )) )
+        try( FunctionResult srcFuncResult = getNodeReferenceFunction(srcNode, srcFunc, this.bindingDef.adapt( LocalizationService.class )) )
         {
             if (srcFuncResult != null)
             {
@@ -375,7 +375,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         IDiagramConnectionEndpointBindingDef targetAnchorDef = this.bindingDef.getEndpoint2().content();
         Value<Function> targetFunc = targetAnchorDef.getValue();;
         
-        try( final FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc, this.bindingDef.adapt( LocalizationService.class )) )
+        try( FunctionResult targetFuncResult = getNodeReferenceFunction(targetNode, targetFunc, this.bindingDef.adapt( LocalizationService.class )) )
         {
             if (targetFuncResult != null)
             {

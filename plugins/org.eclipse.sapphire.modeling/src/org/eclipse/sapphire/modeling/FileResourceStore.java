@@ -34,7 +34,7 @@ public class FileResourceStore extends ByteArrayResourceStore
 
         if( this.file.exists() )
         {
-            try( final InputStream in = new FileInputStream( this.file ) )
+            try( InputStream in = new FileInputStream( this.file ) )
             {
                 setContents( in );
             }
@@ -64,7 +64,7 @@ public class FileResourceStore extends ByteArrayResourceStore
             throw new ResourceStoreException( e );
         }
         
-        try( final OutputStream out = new FileOutputStream( this.file ) )
+        try( OutputStream out = new FileOutputStream( this.file ) )
         {
             out.write( getContents() );
             out.flush();

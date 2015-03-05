@@ -42,7 +42,7 @@ public final class DtdParser
 
     public static XmlDocumentSchema parse( final URL url )
     {
-        try( final InputStream in = url.openStream() )
+        try( InputStream in = url.openStream() )
         {
             return parse( readTextContent( in ) );
         }

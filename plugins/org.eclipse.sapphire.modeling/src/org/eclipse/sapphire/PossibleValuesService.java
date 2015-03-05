@@ -116,7 +116,7 @@ public abstract class PossibleValuesService extends DataService<Set<String>>
                 }
             }
             
-            try( final FunctionResult messageFunctionResult = this.invalidValueMessageFunction.evaluate( new ModelElementFunctionContext( value.element() ) ) )
+            try( FunctionResult messageFunctionResult = this.invalidValueMessageFunction.evaluate( new ModelElementFunctionContext( value.element() ) ) )
             {
                 return Status.createStatus( this.invalidValueSeverity, (String) messageFunctionResult.value() );
             }

@@ -215,7 +215,7 @@ public class DynamicContentProducer implements IHelpContentProducer
 
     private static String loadResource( final String name )
     {
-        try( final InputStream in = DynamicContentProducer.class.getClassLoader().getResourceAsStream( name ) )
+        try( InputStream in = DynamicContentProducer.class.getClassLoader().getResourceAsStream( name ) )
         {
             if( in == null )
             {

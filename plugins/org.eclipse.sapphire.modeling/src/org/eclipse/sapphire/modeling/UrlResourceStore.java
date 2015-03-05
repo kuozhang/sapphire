@@ -33,7 +33,7 @@ public class UrlResourceStore extends ByteArrayResourceStore
     {
         this.url = url;
         
-        try( final InputStream in = this.url.openStream() )
+        try( InputStream in = this.url.openStream() )
         {
             setContents( in );
         }
@@ -84,7 +84,7 @@ public class UrlResourceStore extends ByteArrayResourceStore
                         return false;
                     }
                     
-                    try( final InputStream stream = resFileUrl.openStream() )
+                    try( InputStream stream = resFileUrl.openStream() )
                     {
                         return parse( stream, keyToText );
                     }

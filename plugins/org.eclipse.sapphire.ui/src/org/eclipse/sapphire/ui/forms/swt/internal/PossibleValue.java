@@ -51,7 +51,7 @@ public final class PossibleValue
             return Collections.unmodifiableList( entries );
         }
         
-        public PossibleValue entry( final String value )
+        public PossibleValue entry( String value )
         {
             final String normalized = this.valueNormalizationService.normalize( value );
             final String label = this.valueLabelService.provide( normalized );

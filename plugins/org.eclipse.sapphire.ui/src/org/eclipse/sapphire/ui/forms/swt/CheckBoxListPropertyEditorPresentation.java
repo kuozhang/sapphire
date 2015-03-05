@@ -594,7 +594,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
         private Listener elementImageServiceListener;
         private Listener propertyValidationListener;
         
-        public Entry( final String value, final Element element )
+        public Entry( String value, final Element element )
         {
             this.localizationService = part().definition().adapt( LocalizationService.class );
             this.value = value;
@@ -757,7 +757,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
             
             if( this.element == null )
             {
-                try( final Suspension suspension = list.suspend() )
+                try( Suspension suspension = list.suspend() )
                 {
                     rebase( list.insert() );
                     this.property.write( this.value, true );

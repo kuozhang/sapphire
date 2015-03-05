@@ -33,7 +33,7 @@ public final class MatchesFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Matches( '[a-z][a-z0-9]*' ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Matches( '[a-z][a-z0-9]*' ) }" ).evaluate( context ) )
         {
             assertEquals( false, fr.value() );
             

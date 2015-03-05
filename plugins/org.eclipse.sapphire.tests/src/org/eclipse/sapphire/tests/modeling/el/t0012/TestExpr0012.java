@@ -125,7 +125,7 @@ public final class TestExpr0012 extends TestExpr
         testForExpectedError( context, "${ Min( List1, 'Element1' ) }", "Property TestModelElementA.Element1 is not a value property." );
         testForExpectedError( context, "${ Min( List2 ) }", "Element type TestModelElementB does not contain a value property." );
         
-        try( final FunctionResult result = ExpressionLanguageParser.parse( "${ Min( List1, 'Value1' ) }" ).evaluate( context ) )
+        try( FunctionResult result = ExpressionLanguageParser.parse( "${ Min( List1, 'Value1' ) }" ).evaluate( context ) )
         {
             assertEquals( new BigDecimal( "1" ), result.value() );
             

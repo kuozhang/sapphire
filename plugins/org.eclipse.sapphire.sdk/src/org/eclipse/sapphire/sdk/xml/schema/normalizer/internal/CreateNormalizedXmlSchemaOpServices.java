@@ -115,7 +115,7 @@ public final class CreateNormalizedXmlSchemaOpServices
             op.setFolder( folder );
             op.setFile( fileName );
             
-            try( final PersistedState state = PersistedStateManager.load( sourceFilePath ) )
+            try( PersistedState state = PersistedStateManager.load( sourceFilePath ) )
             {
                 if( state == null )
                 {

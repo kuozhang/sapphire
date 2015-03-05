@@ -309,7 +309,7 @@ public final class ExportModelDocumentationOpMethods
                     
                     if( url != null )
                     {
-                        try( final InputStream in = url.openStream() )
+                        try( InputStream in = url.openStream() )
                         {
                             final Reader reader = new InputStreamReader( in, UTF_8 );
                             final char[] chars = new char[ 1024 ];

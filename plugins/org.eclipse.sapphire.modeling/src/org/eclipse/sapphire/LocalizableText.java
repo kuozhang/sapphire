@@ -199,7 +199,7 @@ public final class LocalizableText
             {
                 Properties properties = null;
                 
-                try( final InputStream in = input )
+                try( InputStream in = input )
                 {
                     properties = new Properties();
                     properties.load( input );

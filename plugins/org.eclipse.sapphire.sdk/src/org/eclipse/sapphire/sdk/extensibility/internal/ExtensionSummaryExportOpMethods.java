@@ -696,7 +696,7 @@ public final class ExtensionSummaryExportOpMethods
                     
                     if( url != null )
                     {
-                        try( final Reader reader = new InputStreamReader( url.openStream(), UTF_8 ) )
+                        try( Reader reader = new InputStreamReader( url.openStream(), UTF_8 ) )
                         {
                             final char[] chars = new char[ 1024 ];
                             

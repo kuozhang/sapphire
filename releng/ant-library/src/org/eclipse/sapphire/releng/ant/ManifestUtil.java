@@ -54,7 +54,7 @@ public final class ManifestUtil
     {
         if( location.isFile() )
         {
-            try( final ZipFile zip = ZipUtil.open( location ) )
+            try( ZipFile zip = ZipUtil.open( location ) )
             {
                 return readManifest( zip );
             }
@@ -65,7 +65,7 @@ public final class ManifestUtil
             
             if( manifestFile.exists() )
             {
-                try( final InputStream in = new FileInputStream( manifestFile ) )
+                try( InputStream in = new FileInputStream( manifestFile ) )
                 {
                     return readManifest( new BufferedInputStream( in ) );
                 }
@@ -77,7 +77,7 @@ public final class ManifestUtil
         }
     }
     
-    public static String readManifestEntry( final File location,
+    public static String readManifestEntry( File location,
                                             final String key )
     
         throws IOException
@@ -102,7 +102,7 @@ public final class ManifestUtil
         
         if( zipentry != null )
         {
-            try( final InputStream in = zip.getInputStream( zipentry ) )
+            try( InputStream in = zip.getInputStream( zipentry ) )
             {
                 return readManifest( in );
             }
@@ -162,7 +162,7 @@ public final class ManifestUtil
         return manifestClasspath;
     }
 
-    public static void setManifestEntry( final File manifestFile,
+    public static void setManifestEntry( File manifestFile,
                                          final String entryKey,
                                          final String entryValue )
     
@@ -182,7 +182,7 @@ public final class ManifestUtil
         
         if( manifestFile.exists() )
         {
-            try( final InputStream in = new FileInputStream( manifestFile ) )
+            try( InputStream in = new FileInputStream( manifestFile ) )
             {
                 manifest.read( new BufferedInputStream( in ) );
             }
@@ -195,7 +195,7 @@ public final class ManifestUtil
             mainAttributes.putValue( entry.getKey(), entry.getValue() );
         }
         
-        try( final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( manifestFile ) ) )
+        try( BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( manifestFile ) ) )
         {
             manifest.write( out );
             out.flush();

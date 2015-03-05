@@ -22,7 +22,7 @@ public abstract class AbstractOperatorTests extends TestExpr
 {
     protected void test( final String expr, final Object expected )
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             testForExpectedValue( new ModelElementFunctionContext( element ), expr, expected );
         }

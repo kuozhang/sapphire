@@ -26,7 +26,7 @@ public final class ModelElementClearTests extends SapphireTestCase
     
     public void testValuePropertyClear()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             element.setStringValueProperty( "abc" );
             element.setIntegerValueProperty( 123 );
@@ -49,7 +49,7 @@ public final class ModelElementClearTests extends SapphireTestCase
 
     public void testTransientPropertyClear()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             element.setTransientProperty( this );
             element.getListProperty().insert();
@@ -68,7 +68,7 @@ public final class ModelElementClearTests extends SapphireTestCase
 
     public void testElementPropertyClear()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getElementProperty().content( true ).setValueProperty( "abc" );
             element.getListProperty().insert();
@@ -87,7 +87,7 @@ public final class ModelElementClearTests extends SapphireTestCase
 
     public void testImpliedElementPropertyClear()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getImpliedElementProperty().setValueProperty( "abc" );
             element.getListProperty().insert();
@@ -106,7 +106,7 @@ public final class ModelElementClearTests extends SapphireTestCase
 
     public void testListPropertyClear()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getListProperty().insert();
             element.getListProperty().insert();
@@ -126,7 +126,7 @@ public final class ModelElementClearTests extends SapphireTestCase
 
     public void testAllPropertiesClear()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             element.setStringValueProperty( "abc" );
             element.setIntegerValueProperty( 123 );

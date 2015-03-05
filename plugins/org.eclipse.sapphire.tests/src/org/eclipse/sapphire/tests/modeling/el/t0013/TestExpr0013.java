@@ -125,7 +125,7 @@ public final class TestExpr0013 extends TestExpr
         testForExpectedError( context, "${ Max( List1, 'Element1' ) }", "Property TestModelElementA.Element1 is not a value property." );
         testForExpectedError( context, "${ Max( List2 ) }", "Element type TestModelElementB does not contain a value property." );
         
-        try( final FunctionResult result = ExpressionLanguageParser.parse( "${ Max( List1, 'Value1' ) }" ).evaluate( context ) )
+        try( FunctionResult result = ExpressionLanguageParser.parse( "${ Max( List1, 'Value1' ) }" ).evaluate( context ) )
         {
             assertEquals( new BigDecimal( "3.5" ), result.value() );
             

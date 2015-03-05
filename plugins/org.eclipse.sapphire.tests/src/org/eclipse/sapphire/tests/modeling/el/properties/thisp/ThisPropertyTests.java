@@ -31,11 +31,11 @@ public final class ThisPropertyTests extends TestExpr
     
     public void testThisProperty()
     {
-        try( final Element element = Element.TYPE.instantiate() )
+        try( Element element = Element.TYPE.instantiate() )
         {
             final FunctionContext context = new ModelElementFunctionContext( element );
             
-            try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ This }" ).evaluate( context ) )
+            try( FunctionResult fr = ExpressionLanguageParser.parse( "${ This }" ).evaluate( context ) )
             {
                 assertSame( element, fr.value() );
             }

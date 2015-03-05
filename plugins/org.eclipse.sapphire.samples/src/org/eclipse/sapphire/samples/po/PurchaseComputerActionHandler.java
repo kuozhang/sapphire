@@ -27,7 +27,7 @@ public final class PurchaseComputerActionHandler extends SapphireActionHandler
     @Override
     protected Object run( final Presentation context )
     {
-        try( final PurchaseComputerOp op = PurchaseComputerOp.TYPE.instantiate() )
+        try( PurchaseComputerOp op = PurchaseComputerOp.TYPE.instantiate() )
         {
             op.setPurchaseOrder( context.part().getLocalModelElement().nearest( PurchaseOrder.class ) );
             

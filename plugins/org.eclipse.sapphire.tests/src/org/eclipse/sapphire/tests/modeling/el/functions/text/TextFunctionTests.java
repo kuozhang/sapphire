@@ -34,7 +34,7 @@ public final class TextFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Text }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Text }" ).evaluate( context ) )
         {
             assertNull( fr.value() );
             
@@ -45,7 +45,7 @@ public final class TextFunctionTests extends TestExpr
             assertEquals( "abc", fr.value() );
         }
 
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValueWithDefault.Text }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValueWithDefault.Text }" ).evaluate( context ) )
         {
             assertEquals( "1", fr.value() );
             
@@ -64,7 +64,7 @@ public final class TextFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( null ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
@@ -80,7 +80,7 @@ public final class TextFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( 'abc' ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             

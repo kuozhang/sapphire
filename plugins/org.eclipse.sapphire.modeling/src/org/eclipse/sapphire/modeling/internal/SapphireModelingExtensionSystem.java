@@ -201,7 +201,7 @@ public final class SapphireModelingExtensionSystem
     
     private static Element parse( final URL url )
     {
-        try( final InputStream in = url.openStream() )
+        try( InputStream in = url.openStream() )
         {
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 

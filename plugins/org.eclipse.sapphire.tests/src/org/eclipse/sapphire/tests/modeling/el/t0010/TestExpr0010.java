@@ -125,7 +125,7 @@ public final class TestExpr0010 extends TestExpr
         testForExpectedError( context, "${ Sum( List1, 'Element1' ) }", "Property TestModelElementA.Element1 is not a value property." );
         testForExpectedError( context, "${ Sum( List2 ) }", "Element type TestModelElementB does not contain a value property." );
         
-        try( final FunctionResult result = ExpressionLanguageParser.parse( "${ Sum( List1, 'Value1' ) }" ).evaluate( context ) )
+        try( FunctionResult result = ExpressionLanguageParser.parse( "${ Sum( List1, 'Value1' ) }" ).evaluate( context ) )
         {
             assertEquals( new BigDecimal( "6.5" ), result.value() );
             

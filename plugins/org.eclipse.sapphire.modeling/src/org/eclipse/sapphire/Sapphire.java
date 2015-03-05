@@ -77,7 +77,7 @@ public final class Sapphire
                 {
                     Manifest manifest = null;
                     
-                    try( final InputStream stream = itr.nextElement().openStream() )
+                    try( InputStream stream = itr.nextElement().openStream() )
                     {
                         manifest = new Manifest( stream );
                     }

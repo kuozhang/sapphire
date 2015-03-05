@@ -541,7 +541,7 @@ public final class XmlDocumentSchemaParser
             throw new RuntimeException( e );
         }
 
-        try( final InputStream in = url.openStream() )
+        try( InputStream in = url.openStream() )
         {
             final Document doc = docbuilder.parse( in );
             

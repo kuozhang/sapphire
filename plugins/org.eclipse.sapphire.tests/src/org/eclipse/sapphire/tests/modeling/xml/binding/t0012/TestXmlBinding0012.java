@@ -33,7 +33,7 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         
-        try( final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) ) )
+        try( TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) ) )
         {
             final TestListEntry x = element.getList().insert();
             x.setValue( "x" );
@@ -47,7 +47,7 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         
-        try( final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
+        try( TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
         {
             final ElementList<TestListEntry> list = element.getList();
             
@@ -66,7 +66,7 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         
-        try( final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
+        try( TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
         {
             final ElementList<TestListEntry> list = element.getList();
             
@@ -108,7 +108,7 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         
-        try( final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
+        try( TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
         {
             final ElementList<TestListEntry> list = element.getList();
             

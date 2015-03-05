@@ -33,7 +33,7 @@ public final class HeadFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Head( 3 ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Head( 3 ) }" ).evaluate( context ) )
         {
             assertEquals( "", fr.value() );
             
@@ -44,7 +44,7 @@ public final class HeadFunctionTests extends TestExpr
             assertEquals( "abc", fr.value() );
         }
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Head( 0 ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Head( 0 ) }" ).evaluate( context ) )
         {
             element.setValue( null );
             assertEquals( "", fr.value() );
@@ -56,7 +56,7 @@ public final class HeadFunctionTests extends TestExpr
             assertEquals( "", fr.value() );
         }
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Head( -3 ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Head( -3 ) }" ).evaluate( context ) )
         {
             element.setValue( null );
             assertEquals( "", fr.value() );

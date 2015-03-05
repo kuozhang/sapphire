@@ -30,7 +30,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -72,7 +72,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference_Refactoring()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             testRefactoring( element.getItemList1(), element.getDeclarativeReference() );
         }
@@ -82,7 +82,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference_Write()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -107,7 +107,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference_Write_Foreign_1()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -137,7 +137,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference_Write_Foreign_2()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -146,7 +146,7 @@ public final class ElementReferenceTests extends SapphireTestCase
             
             assertEquals( "a", element.getDeclarativeReference().text() );
 
-            try( final TestElement.Item foreign = TestElement.Item.TYPE.instantiate() )
+            try( TestElement.Item foreign = TestElement.Item.TYPE.instantiate() )
             {
                 try
                 {
@@ -164,7 +164,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void CustomElementReference()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -254,7 +254,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void CustomElementReference_Refactoring()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             testRefactoring( element.getItemList1(), element.getCustomReference() );
         }
@@ -264,7 +264,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void CustomElementReference_Write()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -312,8 +312,8 @@ public final class ElementReferenceTests extends SapphireTestCase
     {
         try
         (
-            final TestElement element = TestElement.TYPE.instantiate();
-            final TestElement external = TestElement.TYPE.instantiate();
+            TestElement element = TestElement.TYPE.instantiate();
+            TestElement external = TestElement.TYPE.instantiate();
         )
         {
             final TestElement.Item a = external.getItemList1().insert();
@@ -366,8 +366,8 @@ public final class ElementReferenceTests extends SapphireTestCase
     {
         try
         (
-            final TestElement element = TestElement.TYPE.instantiate();
-            final TestElement external = TestElement.TYPE.instantiate();
+            TestElement element = TestElement.TYPE.instantiate();
+            TestElement external = TestElement.TYPE.instantiate();
         )
         {
             element.getExternalReference().service( ExternalElementReferenceService.class ).list( external.getItemList1() );

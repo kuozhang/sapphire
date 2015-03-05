@@ -33,7 +33,7 @@ public final class EndsWithFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.EndsWith( 'defg' ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.EndsWith( 'defg' ) }" ).evaluate( context ) )
         {
             assertEquals( false, fr.value() );
             

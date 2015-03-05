@@ -71,7 +71,7 @@ public final class StringToImageDataConversionService extends ConversionService<
         
         if( stream != null )
         {
-            try( final InputStream in = stream )
+            try( InputStream in = stream )
             {
                 return ImageData.readFromStream( stream ).optional();
             }

@@ -29,7 +29,7 @@ public final class OpenSendPostcardWizardHandler extends AbstractHandler
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        try( final SendPostcardOp operation = SendPostcardOp.TYPE.instantiate() )
+        try( SendPostcardOp operation = SendPostcardOp.TYPE.instantiate() )
         {
             final SapphireWizard<SendPostcardOp> wizard = new SapphireWizard<SendPostcardOp>
             (

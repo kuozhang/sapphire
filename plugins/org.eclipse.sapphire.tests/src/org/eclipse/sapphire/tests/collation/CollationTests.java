@@ -30,7 +30,7 @@ public final class CollationTests extends SapphireTestCase
     
     public void NoCollationSpecified()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getNoCollationSpecified().service( CollationService.class );
             
@@ -53,7 +53,7 @@ public final class CollationTests extends SapphireTestCase
     
     public void IgnoreCaseLiteralFalse()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getIgnoreCaseLiteralFalse().service( CollationService.class );
             
@@ -76,7 +76,7 @@ public final class CollationTests extends SapphireTestCase
     
     public void IgnoreCaseLiteralTrue()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getIgnoreCaseLiteralTrue().service( CollationService.class );
             
@@ -99,7 +99,7 @@ public final class CollationTests extends SapphireTestCase
     
     public void IgnoreCaseDynamic()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getIgnoreCaseDynamic().service( CollationService.class );
             
@@ -133,7 +133,7 @@ public final class CollationTests extends SapphireTestCase
     {
         Sapphire.global().put( "TestIgnoreCase", false );
         
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getIgnoreCaseDynamicGlobal().service( CollationService.class );
             

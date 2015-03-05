@@ -68,7 +68,7 @@ public final class TestPropertyEvents extends SapphireTestCase
     
     public void testEventsValuePropertyPlain() throws Exception
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final List<Event> events = monitor( element );
             
@@ -102,7 +102,7 @@ public final class TestPropertyEvents extends SapphireTestCase
 
     public void testEventsValuePropertyConstrained() throws Exception
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final List<Event> events = monitor( element );
             
@@ -153,7 +153,7 @@ public final class TestPropertyEvents extends SapphireTestCase
     
     public void testEventsListPropertyDescendents() throws Exception
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final List<Event> events = monitor( element, "List/*" );
             
@@ -211,7 +211,7 @@ public final class TestPropertyEvents extends SapphireTestCase
     
     public void testEventsListPropertyPath() throws Exception
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final List<Event> events = monitor( element, "List/Children/Value" );
             

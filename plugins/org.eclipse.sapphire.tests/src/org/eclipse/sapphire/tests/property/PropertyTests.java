@@ -29,7 +29,7 @@ public final class PropertyTests extends SapphireTestCase
     
     public void HoldsElement() throws Exception
     {
-        try( final TestElement a = TestElement.TYPE.instantiate() )
+        try( TestElement a = TestElement.TYPE.instantiate() )
         {
             final TestElement aa = a.getElement().content( true );
             
@@ -56,7 +56,7 @@ public final class PropertyTests extends SapphireTestCase
     
     public void HoldsProperty() throws Exception
     {
-        try( final TestElement a = TestElement.TYPE.instantiate() )
+        try( TestElement a = TestElement.TYPE.instantiate() )
         {
             final TestElement aa = a.getElement().content( true );
             
@@ -97,7 +97,7 @@ public final class PropertyTests extends SapphireTestCase
     {
         final EventLog log = new EventLog();
         
-        try( final TestElement a = TestElement.TYPE.instantiate() )
+        try( TestElement a = TestElement.TYPE.instantiate() )
         {
             a.attach( log, "*" );
             
@@ -113,7 +113,7 @@ public final class PropertyTests extends SapphireTestCase
             
             log.clear();
             
-            try( final Suspension suspension = a.getElement().suspend() )
+            try( Suspension suspension = a.getElement().suspend() )
             {
                 aa.setValue( "def" );
                 aa.getList().insert().setValue( "ghi" );

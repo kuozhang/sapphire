@@ -32,12 +32,12 @@ public final class IndexFunctionTests extends TestExpr
     
     public void testIndexFunction()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final Element entry = element.getList().insert();
             final FunctionContext context = new ModelElementFunctionContext( entry );
             
-            try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
+            try( FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
             {
                 assertEquals( 0, fr.value() );
                 
@@ -63,11 +63,11 @@ public final class IndexFunctionTests extends TestExpr
 
     public void testIndexFunctionOnRoot()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final FunctionContext context = new ModelElementFunctionContext( element );
             
-            try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
+            try( FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
             {
                 final Status st = fr.status();
                 
@@ -81,12 +81,12 @@ public final class IndexFunctionTests extends TestExpr
 
     public void testIndexFunctionOnElementPropertyContent()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final Element child = element.getElement().content( true );
             final FunctionContext context = new ModelElementFunctionContext( child );
             
-            try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
+            try( FunctionResult fr = ExpressionLanguageParser.parse( "${ This.Index }" ).evaluate( context ) )
             {
                 final Status st = fr.status();
                 

@@ -26,7 +26,7 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
     
     public void testDeclarativeValidationService() throws Exception
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             assertValidationOk( element.getMin() );
             assertValidationOk( element.getMax() );
@@ -53,7 +53,7 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
     
     public void testDeclarativeValidationService_MessageFunction() throws Exception
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             assertValidationOk( element.getPath() );
             

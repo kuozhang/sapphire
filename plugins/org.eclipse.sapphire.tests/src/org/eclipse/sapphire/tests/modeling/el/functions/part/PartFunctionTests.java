@@ -34,11 +34,11 @@ public final class PartFunctionTests extends TestExpr
     
     public void testPartFunctionInPartContext()
     {
-        try( final Element element = Element.TYPE.instantiate() )
+        try( Element element = Element.TYPE.instantiate() )
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartFunctionTests.class ).dialog();
             
-            try( final SapphirePart part = new DialogPart() )
+            try( SapphirePart part = new DialogPart() )
             {
                 part.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
                 part.initialize();

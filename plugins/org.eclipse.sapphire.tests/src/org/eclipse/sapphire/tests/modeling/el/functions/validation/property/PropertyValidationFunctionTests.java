@@ -34,7 +34,7 @@ public final class PropertyValidationFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Validation }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ IntegerValue.Validation }" ).evaluate( context ) )
         {
             assertValidationOk( (Status) fr.value() );
             
@@ -56,7 +56,7 @@ public final class PropertyValidationFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Validation( null ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Validation( null ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             
@@ -72,7 +72,7 @@ public final class PropertyValidationFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Validation( 'abc' ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Validation( 'abc' ) }" ).evaluate( context ) )
         {
             final Status st = fr.status();
             

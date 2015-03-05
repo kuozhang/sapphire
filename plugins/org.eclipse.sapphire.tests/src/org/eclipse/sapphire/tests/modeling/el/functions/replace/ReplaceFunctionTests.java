@@ -33,7 +33,7 @@ public final class ReplaceFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        try( final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Replace( '[0-9]', 'x' ) }" ).evaluate( context ) )
+        try( FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Replace( '[0-9]', 'x' ) }" ).evaluate( context ) )
         {
             assertEquals( "", fr.value() );
             

@@ -33,8 +33,8 @@ public final class DefinitionLoaderTests extends SapphireTestCase
     {
         try
         (
-            final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).dialog();
-            final DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).dialog();
+            DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).dialog();
+            DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).dialog();
         )
         {
             assertSame( h1.resolve(), h2.resolve() );
@@ -51,8 +51,8 @@ public final class DefinitionLoaderTests extends SapphireTestCase
         
         try
         (
-            final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( cldr ).sdef( pkg + ".TestDefinition" ).dialog();
-            final DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( cldr ).sdef( pkg + ".TestDefinition" ).dialog();
+            DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( cldr ).sdef( pkg + ".TestDefinition" ).dialog();
+            DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( cldr ).sdef( pkg + ".TestDefinition" ).dialog();
         )
         {
             assertSame( h1.resolve(), h2.resolve() );
@@ -69,8 +69,8 @@ public final class DefinitionLoaderTests extends SapphireTestCase
         
         try
         (
-            final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( BundleBasedContext.adapt( bundle ) ).sdef( pkg + ".TestDefinition" ).dialog();
-            final DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( BundleBasedContext.adapt( bundle ) ).sdef( pkg + ".TestDefinition" ).dialog();
+            DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( BundleBasedContext.adapt( bundle ) ).sdef( pkg + ".TestDefinition" ).dialog();
+            DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( BundleBasedContext.adapt( bundle ) ).sdef( pkg + ".TestDefinition" ).dialog();
         )
         {
             assertSame( h1.resolve(), h2.resolve() );

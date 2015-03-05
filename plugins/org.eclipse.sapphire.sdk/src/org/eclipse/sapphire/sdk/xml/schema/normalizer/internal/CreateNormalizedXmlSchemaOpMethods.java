@@ -95,7 +95,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
         {
             final Path sourceSchemaFilePath = operation.getSourceFile().content();
             
-            try( final PersistedState state = PersistedStateManager.load( sourceSchemaFilePath ) )
+            try( PersistedState state = PersistedStateManager.load( sourceSchemaFilePath ) )
             {
                 if( state != null )
                 {
@@ -119,7 +119,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
             final IFile sourceSchemaFile = wsroot.getFile( PathBridge.create( sourceSchemaFilePath ) );
             final IFile targetSchemaFile = operation.getFile().target();
             
-            try( final InputStream sourceSchemaFileInputStream = sourceSchemaFile.getContents() )
+            try( InputStream sourceSchemaFileInputStream = sourceSchemaFile.getContents() )
             {
                 targetSchemaFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
                 

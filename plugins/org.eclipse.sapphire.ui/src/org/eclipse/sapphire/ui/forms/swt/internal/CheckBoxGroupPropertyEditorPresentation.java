@@ -363,7 +363,7 @@ public final class CheckBoxGroupPropertyEditorPresentation extends ListPropertyE
                             
                             if( e == null && selection == true )
                             {
-                                try( final Suspension s = list.suspend() )
+                                try( Suspension s = list.suspend() )
                                 {
                                     e = list.insert();
                                     writeMemberProperty( e, (String) checkbox.getData( "Value" ) );

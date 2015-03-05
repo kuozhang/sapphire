@@ -83,7 +83,7 @@ public final class ExportDocumentationTask extends AbstractTask
         
         final URLConnection connection = ( new URL( url ) ).openConnection();
         
-        try( final InputStream stream = connection.getInputStream() )
+        try( InputStream stream = connection.getInputStream() )
         {
             if( connection.getContentType().equals( "text/html" ) )
             {
@@ -136,14 +136,14 @@ public final class ExportDocumentationTask extends AbstractTask
                     export( url( urlParent, ref ), base, destination, captured );
                 }
                 
-                try( final OutputStreamWriter fw = new OutputStreamWriter( new FileOutputStream( f ), "UTF-8" ) )
+                try( OutputStreamWriter fw = new OutputStreamWriter( new FileOutputStream( f ), "UTF-8" ) )
                 {
                     fw.write( html );
                 }
             }
             else
             {
-                try( final FileOutputStream fout = new FileOutputStream( f ) )
+                try( FileOutputStream fout = new FileOutputStream( f ) )
                 {
                     byte[] buffer = new byte[ 1024 ];
                     

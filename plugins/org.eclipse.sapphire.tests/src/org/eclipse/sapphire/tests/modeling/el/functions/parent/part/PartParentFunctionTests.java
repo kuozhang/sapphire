@@ -34,11 +34,11 @@ public final class PartParentFunctionTests extends TestExpr
     
     public void testPartParentFunction()
     {
-        try( final TestElement element = TestElement.TYPE.instantiate() )
+        try( TestElement element = TestElement.TYPE.instantiate() )
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartParentFunctionTests.class ).dialog();
             
-            try( final DialogPart dialogPart = new DialogPart() )
+            try( DialogPart dialogPart = new DialogPart() )
             {
                 dialogPart.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
                 dialogPart.initialize();

@@ -51,7 +51,7 @@ public class MapDragAndDropService extends DragAndDropService
         final IFile file = (IFile) context.object();
         final List<String> locations = new ArrayList<String>();
         
-        try( final InputStream in = file.getContents() )
+        try( InputStream in = file.getContents() )
         {
             final BufferedReader br = new BufferedReader( new InputStreamReader( in, UTF_8 ) );
             

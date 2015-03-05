@@ -128,7 +128,7 @@ public final class DefinitionLoader
         
         final Resource resource;
         
-        try( final InputStream stream = this.context.findResource( name.replace( '.', '/' ) + ".sdef" ) )
+        try( InputStream stream = this.context.findResource( name.replace( '.', '/' ) + ".sdef" ) )
         {
             if( stream == null )
             {

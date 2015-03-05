@@ -63,7 +63,7 @@ public final class ClassLocalizationService extends StandardLocalizationService
             
             if( stream != null )
             {
-                try( final InputStream in = stream )
+                try( InputStream in = stream )
                 {
                     return parse( stream, keyToText );
                 }
