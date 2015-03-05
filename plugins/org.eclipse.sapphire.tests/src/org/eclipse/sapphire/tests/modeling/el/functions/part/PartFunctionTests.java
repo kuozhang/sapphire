@@ -34,9 +34,7 @@ public final class PartFunctionTests extends TestExpr
     
     public void testPartFunctionInPartContext()
     {
-        final Element element = Element.TYPE.instantiate();
-        
-        try
+        try( final Element element = Element.TYPE.instantiate() )
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartFunctionTests.class ).dialog();
             final SapphirePart part = new DialogPart();
@@ -52,10 +50,6 @@ public final class PartFunctionTests extends TestExpr
             {
                 part.dispose();
             }
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     

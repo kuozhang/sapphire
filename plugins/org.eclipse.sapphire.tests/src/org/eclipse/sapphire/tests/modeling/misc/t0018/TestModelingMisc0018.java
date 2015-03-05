@@ -31,9 +31,7 @@ public final class TestModelingMisc0018 extends SapphireTestCase
     
     public void testRuntimeTypeCompilation() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.setStringValue( "abc" );
             assertEquals( "abc", element.getStringValue().content() );
@@ -69,10 +67,6 @@ public final class TestModelingMisc0018 extends SapphireTestCase
             
             element.method1();
             assertEquals( 2, element.method2( 1, "abc", new String[] { "foo", "bar" }, null ).length );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     

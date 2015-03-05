@@ -32,9 +32,7 @@ public final class SendContactActionHandler extends SapphireActionHandler
     {
         final Contact contact = (Contact) getModelElement();
         
-        final SendContactOp operation = SendContactOp.TYPE.instantiate();
-        
-        try
+        try( final SendContactOp operation = SendContactOp.TYPE.instantiate() )
         {
             operation.setContact( contact );
             
@@ -47,10 +45,6 @@ public final class SendContactActionHandler extends SapphireActionHandler
             final WizardDialog dialog = new WizardDialog( ( (FormComponentPresentation) context ).shell(), wizard );
             
             dialog.open();
-        }
-        finally
-        {
-            operation.dispose();
         }
         
         return null;

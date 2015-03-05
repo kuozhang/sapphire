@@ -1167,6 +1167,12 @@ public abstract class ElementImpl implements Element
         }
     }
     
+    @Override
+    public final void close()
+    {
+        dispose();
+    }
+    
     protected final void assertNotDisposed()
     {
         if( disposed() )

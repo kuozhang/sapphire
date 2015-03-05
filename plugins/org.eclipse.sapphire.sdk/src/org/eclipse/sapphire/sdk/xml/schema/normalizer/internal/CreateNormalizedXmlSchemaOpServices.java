@@ -115,25 +115,19 @@ public final class CreateNormalizedXmlSchemaOpServices
             op.setFolder( folder );
             op.setFile( fileName );
             
-            final PersistedState state = PersistedStateManager.load( sourceFilePath );
-            
-            if( state == null )
+            try( final PersistedState state = PersistedStateManager.load( sourceFilePath ) )
             {
-                op.getRootElements().clear();
-            }
-            else
-            {
-                try
+                if( state == null )
+                {
+                    op.getRootElements().clear();
+                }
+                else
                 {
                     op.getRootElements().copy( state );
                     op.getExclusions().copy( state );
                     op.getTypeSubstitutions().copy( state );
                     op.getSortSequenceContent().copy( state );
                     op.getRemoveWildcards().copy( state );
-                }
-                finally
-                {
-                    state.dispose();
                 }
             }
         }

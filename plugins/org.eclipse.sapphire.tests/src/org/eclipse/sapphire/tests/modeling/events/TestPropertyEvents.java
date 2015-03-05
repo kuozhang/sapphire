@@ -68,9 +68,7 @@ public final class TestPropertyEvents extends SapphireTestCase
     
     public void testEventsValuePropertyPlain() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final List<Event> events = monitor( element );
             
@@ -98,19 +96,13 @@ public final class TestPropertyEvents extends SapphireTestCase
             assertEquals( 1, events.size() );
             assertValuePropertyContentEvent( events.get( 0 ), element.getValuePlain(), "b", "c" );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
 
     public void testEventsValuePropertyConstrained() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final List<Event> events = monitor( element );
             
@@ -155,19 +147,13 @@ public final class TestPropertyEvents extends SapphireTestCase
             assertValuePropertyContentEvent( events.get( 0 ), element.getEnablement(), null, "false" );
             assertPropertyEnablementEvent( events.get( 1 ), element.getValueConstrained(), true, false );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
     
     public void testEventsListPropertyDescendents() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final List<Event> events = monitor( element, "List/*" );
             
@@ -219,19 +205,13 @@ public final class TestPropertyEvents extends SapphireTestCase
             assertPropertyContentEvent( events.get( 0 ), ba.getValue() );
             assertPropertyContentEvent( events.get( 1 ), bb.getValue() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void testEventsListPropertyPath() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final List<Event> events = monitor( element, "List/Children/Value" );
             
@@ -278,10 +258,6 @@ public final class TestPropertyEvents extends SapphireTestCase
             assertEquals( 2, events.size() );
             assertPropertyContentEvent( events.get( 0 ), ba.getValue() );
             assertPropertyContentEvent( events.get( 1 ), bb.getValue() );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

@@ -30,9 +30,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -68,25 +66,15 @@ public final class ElementReferenceTests extends SapphireTestCase
             assertEquals( set( "a", "b", "c", "d" ), possibleValuesService.values() );
             assertValidationOk( element.getDeclarativeReference() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void DeclarativeElementReference_Refactoring()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             testRefactoring( element.getItemList1(), element.getDeclarativeReference() );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -94,9 +82,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference_Write()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -111,10 +97,6 @@ public final class ElementReferenceTests extends SapphireTestCase
             
             assertEquals( "a", element.getDeclarativeReference().text() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     /**
@@ -125,9 +107,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference_Write_Foreign_1()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -147,10 +127,6 @@ public final class ElementReferenceTests extends SapphireTestCase
             
             assertEquals( "a", element.getDeclarativeReference().text() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     /**
@@ -161,9 +137,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void DeclarativeElementReference_Write_Foreign_2()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -172,9 +146,7 @@ public final class ElementReferenceTests extends SapphireTestCase
             
             assertEquals( "a", element.getDeclarativeReference().text() );
 
-            final TestElement.Item foreign = TestElement.Item.TYPE.instantiate();
-            
-            try
+            try( final TestElement.Item foreign = TestElement.Item.TYPE.instantiate() )
             {
                 try
                 {
@@ -185,14 +157,6 @@ public final class ElementReferenceTests extends SapphireTestCase
                 
                 assertEquals( "a", element.getDeclarativeReference().text() );
             }
-            finally
-            {
-                foreign.dispose();
-            }
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -200,9 +164,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void CustomElementReference()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -286,25 +248,15 @@ public final class ElementReferenceTests extends SapphireTestCase
             
             assertValidationOk( element.getCustomReference() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void CustomElementReference_Refactoring()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             testRefactoring( element.getItemList1(), element.getCustomReference() );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -312,9 +264,7 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void CustomElementReference_Write()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final TestElement.Item a = element.getItemList1().insert();
             a.setName( "a" );
@@ -354,74 +304,59 @@ public final class ElementReferenceTests extends SapphireTestCase
             
             assertEquals( "6", element.getCustomReference().text() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
     
     public void ExternalElementReference()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
         try
-        {
+        (
+            final TestElement element = TestElement.TYPE.instantiate();
             final TestElement external = TestElement.TYPE.instantiate();
-            
-            try
-            {
-                final TestElement.Item a = external.getItemList1().insert();
-                a.setName( "a" );
-                
-                final TestElement.Item b = external.getItemList1().insert();
-                b.setName( "b" );
-                
-                final TestElement.Item c = external.getItemList1().insert();
-                c.setName( "c" );
-                
-                element.getExternalReference().service( ExternalElementReferenceService.class ).list( external.getItemList1() );
-                
-                assertValidationOk( element.getExternalReference() );
-                
-                element.setExternalReference( "a" );
-                assertSame( a, element.getExternalReference().target() );
-                assertValidationOk( element.getExternalReference() );
-                
-                element.setExternalReference( "c" );
-                assertSame( c, element.getExternalReference().target() );
-                assertValidationOk( element.getExternalReference() );
-                
-                element.setExternalReference( "d" );
-                assertNull( element.getExternalReference().target() );
-                assertValidationError( element.getExternalReference(), "Could not resolve external reference \"d\"" );
-                
-                final PossibleValuesService possibleValuesService = element.getExternalReference().service( PossibleValuesService.class );
-                
-                assertNotNull( possibleValuesService );
-                assertEquals( set( "a", "b", "c" ), possibleValuesService.values() );
-                
-                final TestElement.Item d = external.getItemList1().insert();
-                d.setName( "d" );
-                
-                assertEquals( set( "a", "b", "c", "d" ), possibleValuesService.values() );
-                assertValidationOk( element.getExternalReference() );
-                
-                d.getName().write( "dd", true );
-                
-                assertEquals( set( "a", "b", "c", "dd" ), possibleValuesService.values() );
-                assertEquals( "dd", element.getExternalReference().content() );
-                assertValidationOk( element.getExternalReference() );
-            }
-            finally
-            {
-                external.dispose();
-            }
-        }
-        finally
+        )
         {
-            element.dispose();
+            final TestElement.Item a = external.getItemList1().insert();
+            a.setName( "a" );
+            
+            final TestElement.Item b = external.getItemList1().insert();
+            b.setName( "b" );
+            
+            final TestElement.Item c = external.getItemList1().insert();
+            c.setName( "c" );
+            
+            element.getExternalReference().service( ExternalElementReferenceService.class ).list( external.getItemList1() );
+            
+            assertValidationOk( element.getExternalReference() );
+            
+            element.setExternalReference( "a" );
+            assertSame( a, element.getExternalReference().target() );
+            assertValidationOk( element.getExternalReference() );
+            
+            element.setExternalReference( "c" );
+            assertSame( c, element.getExternalReference().target() );
+            assertValidationOk( element.getExternalReference() );
+            
+            element.setExternalReference( "d" );
+            assertNull( element.getExternalReference().target() );
+            assertValidationError( element.getExternalReference(), "Could not resolve external reference \"d\"" );
+            
+            final PossibleValuesService possibleValuesService = element.getExternalReference().service( PossibleValuesService.class );
+            
+            assertNotNull( possibleValuesService );
+            assertEquals( set( "a", "b", "c" ), possibleValuesService.values() );
+            
+            final TestElement.Item d = external.getItemList1().insert();
+            d.setName( "d" );
+            
+            assertEquals( set( "a", "b", "c", "d" ), possibleValuesService.values() );
+            assertValidationOk( element.getExternalReference() );
+            
+            d.getName().write( "dd", true );
+            
+            assertEquals( set( "a", "b", "c", "dd" ), possibleValuesService.values() );
+            assertEquals( "dd", element.getExternalReference().content() );
+            assertValidationOk( element.getExternalReference() );
         }
     }
 
@@ -429,26 +364,15 @@ public final class ElementReferenceTests extends SapphireTestCase
     
     public void ExternalElementReference_Refactoring()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
         try
-        {
+        (
+            final TestElement element = TestElement.TYPE.instantiate();
             final TestElement external = TestElement.TYPE.instantiate();
-            
-            try
-            {
-                element.getExternalReference().service( ExternalElementReferenceService.class ).list( external.getItemList1() );
-                
-                testRefactoring( external.getItemList1(), element.getExternalReference() );
-            }
-            finally
-            {
-                external.dispose();
-            }
-        }
-        finally
+        )
         {
-            element.dispose();
+            element.getExternalReference().service( ExternalElementReferenceService.class ).list( external.getItemList1() );
+            
+            testRefactoring( external.getItemList1(), element.getExternalReference() );
         }
     }
 

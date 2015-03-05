@@ -31,9 +31,7 @@ public final class RelativePathTests extends SapphireTestCase
     
     public void MustExistValidation_WhenRootChanges() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final IProject project = project();
             
@@ -55,10 +53,6 @@ public final class RelativePathTests extends SapphireTestCase
             element.setRootPath( bFolderPath );
             
             assertValidationOk( element.getRelativePath() );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

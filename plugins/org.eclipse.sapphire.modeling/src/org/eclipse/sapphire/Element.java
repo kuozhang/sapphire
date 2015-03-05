@@ -25,7 +25,7 @@ import org.eclipse.sapphire.services.Service;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public interface Element extends Observable, Disposable
+public interface Element extends Observable, Disposable, AutoCloseable
 {
     ElementType TYPE = new ElementType( Element.class );
     
@@ -230,6 +230,9 @@ public interface Element extends Observable, Disposable
      */
     
     Disposable suspend();
+    
+    @Override
+    void close();
     
     boolean disposed();
 }

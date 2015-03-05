@@ -95,26 +95,23 @@ public final class CreateNormalizedXmlSchemaOpMethods
         {
             final Path sourceSchemaFilePath = operation.getSourceFile().content();
             
-            final PersistedState state = PersistedStateManager.load( sourceSchemaFilePath );
-            
-            if( state != null )
+            try( final PersistedState state = PersistedStateManager.load( sourceSchemaFilePath ) )
             {
-                try
+                if( state != null )
                 {
-                    state.getRootElements().copy( operation );
-                    state.getExclusions().copy( operation );
-                    state.getTypeSubstitutions().copy( operation );
-                    state.getSortSequenceContent().copy( operation );
-                    state.getRemoveWildcards().copy( operation );
-                    state.resource().save();
-                }
-                catch( ResourceStoreException e )
-                {
-                    // Ignore, since persisted state isn't a critical aspect.
-                }
-                finally
-                {
-                    state.dispose();
+                    try
+                    {
+                        state.getRootElements().copy( operation );
+                        state.getExclusions().copy( operation );
+                        state.getTypeSubstitutions().copy( operation );
+                        state.getSortSequenceContent().copy( operation );
+                        state.getRemoveWildcards().copy( operation );
+                        state.resource().save();
+                    }
+                    catch( final ResourceStoreException e )
+                    {
+                        // Ignore, since persisted state isn't a critical aspect.
+                    }
                 }
             }
             

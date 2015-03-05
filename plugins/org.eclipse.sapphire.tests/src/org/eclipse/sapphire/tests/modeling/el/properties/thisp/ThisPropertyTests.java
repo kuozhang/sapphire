@@ -31,9 +31,7 @@ public final class ThisPropertyTests extends TestExpr
     
     public void testThisProperty()
     {
-        final Element element = Element.TYPE.instantiate();
-        
-        try
+        try( final Element element = Element.TYPE.instantiate() )
         {
             final FunctionContext context = new ModelElementFunctionContext( element );
             
@@ -41,10 +39,6 @@ public final class ThisPropertyTests extends TestExpr
             {
                 assertSame( element, fr.value() );
             }
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

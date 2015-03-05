@@ -29,9 +29,7 @@ public final class PropertyTests extends SapphireTestCase
     
     public void HoldsElement() throws Exception
     {
-        final TestElement a = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement a = TestElement.TYPE.instantiate() )
         {
             final TestElement aa = a.getElement().content( true );
             
@@ -52,19 +50,13 @@ public final class PropertyTests extends SapphireTestCase
             assertFalse( aa.getTransient().holds( aaa ) );
             assertFalse( aa.getElement().holds( aaa ) );
         }
-        finally
-        {
-            a.dispose();
-        }
     }
 
     @Test
     
     public void HoldsProperty() throws Exception
     {
-        final TestElement a = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement a = TestElement.TYPE.instantiate() )
         {
             final TestElement aa = a.getElement().content( true );
             
@@ -97,10 +89,6 @@ public final class PropertyTests extends SapphireTestCase
             assertFalse( aa.getTransient().holds( aaa.getValue() ) );
             assertFalse( aa.getElement().holds( aaa.getValue() ) );
         }
-        finally
-        {
-            a.dispose();
-        }
     }
 
     @Test
@@ -108,9 +96,8 @@ public final class PropertyTests extends SapphireTestCase
     public void Suspend()
     {
         final EventLog log = new EventLog();
-        final TestElement a = TestElement.TYPE.instantiate();
         
-        try
+        try( final TestElement a = TestElement.TYPE.instantiate() )
         {
             a.attach( log, "*" );
             
@@ -154,10 +141,6 @@ public final class PropertyTests extends SapphireTestCase
             assertPropertyContentEvent( log.event( 2 ), aa.getList().get( 1 ).getValue() );
             assertPropertyContentEvent( log.event( 3 ), aa.getElement() );
             assertPropertyContentEvent( log.event( 4 ), aa.getElement().content().getValue() );
-        }
-        finally
-        {
-            a.dispose();
         }
     }
     

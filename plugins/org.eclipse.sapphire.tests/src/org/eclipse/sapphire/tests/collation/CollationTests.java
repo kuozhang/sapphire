@@ -30,9 +30,7 @@ public final class CollationTests extends SapphireTestCase
     
     public void NoCollationSpecified()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getNoCollationSpecified().service( CollationService.class );
             
@@ -49,19 +47,13 @@ public final class CollationTests extends SapphireTestCase
             assertTrue( comparator.compare( "b", "a" ) > 0 );
             assertTrue( comparator.compare( "A", "a" ) != 0 );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void IgnoreCaseLiteralFalse()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getIgnoreCaseLiteralFalse().service( CollationService.class );
             
@@ -78,19 +70,13 @@ public final class CollationTests extends SapphireTestCase
             assertTrue( comparator.compare( "b", "a" ) > 0 );
             assertTrue( comparator.compare( "A", "a" ) != 0 );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void IgnoreCaseLiteralTrue()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getIgnoreCaseLiteralTrue().service( CollationService.class );
             
@@ -107,19 +93,13 @@ public final class CollationTests extends SapphireTestCase
             assertTrue( comparator.compare( "b", "a" ) > 0 );
             assertTrue( comparator.compare( "A", "a" ) == 0 );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void IgnoreCaseDynamic()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getIgnoreCaseDynamic().service( CollationService.class );
             
@@ -145,10 +125,6 @@ public final class CollationTests extends SapphireTestCase
             assertTrue( comparator2.compare( "b", "a" ) > 0 );
             assertTrue( comparator2.compare( "A", "a" ) == 0 );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
@@ -157,9 +133,7 @@ public final class CollationTests extends SapphireTestCase
     {
         Sapphire.global().put( "TestIgnoreCase", false );
         
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final CollationService serviceFromInstanceContext = element.getIgnoreCaseDynamicGlobal().service( CollationService.class );
             
@@ -184,10 +158,6 @@ public final class CollationTests extends SapphireTestCase
             assertTrue( comparator2.compare( "a", "b" ) < 0 );
             assertTrue( comparator2.compare( "b", "a" ) > 0 );
             assertTrue( comparator2.compare( "A", "a" ) == 0 );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

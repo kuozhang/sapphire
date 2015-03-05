@@ -53,6 +53,7 @@
 <ol>
   <li><a href="#AutoCloseable">AutoCloseable</a></li>
   <ol type="A">
+    <li><a href="#AutoCloseable-Element">Element</a></li>
     <li><a href="#AutoCloseable-FunctionResult">FunctionResult</a></li>
   </ol>
   <li><a href="#Core">Core</a></li>
@@ -72,7 +73,17 @@
 </ol>
 
 
-<h2><a name="AutoCloseable"><a name="AutoCloseable-FunctionResult">FunctionResult is AutoCloseable</a></a></h2>
+<h2><a name="AutoCloseable"><a name="AutoCloseable-Element">Element is AutoCloseable</a></a></h2>
+
+<p>Taking advantage of Java 7, Element now extends AutoCloseable, so it can be used in the try-with-resources construct.</p>
+
+<pre class="source-code"><code>try( final ExampleElement example = ExampleElement.TYPE.instantiate() )
+{
+    ...
+}</code></pre>
+
+
+<h2><a name="AutoCloseable-FunctionResult">FunctionResult is AutoCloseable</a></h2>
 
 <p>Taking advantage of Java 7, FunctionResult now implements AutoCloseable, so it can be used in the try-with-resources construct.</p>
 

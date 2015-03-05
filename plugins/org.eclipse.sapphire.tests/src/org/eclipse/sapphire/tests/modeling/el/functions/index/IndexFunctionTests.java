@@ -32,9 +32,7 @@ public final class IndexFunctionTests extends TestExpr
     
     public void testIndexFunction()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final Element entry = element.getList().insert();
             final FunctionContext context = new ModelElementFunctionContext( entry );
@@ -59,19 +57,13 @@ public final class IndexFunctionTests extends TestExpr
                 assertEquals( 0, fr.value() );
             }
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
 
     public void testIndexFunctionOnRoot()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final FunctionContext context = new ModelElementFunctionContext( element );
             
@@ -83,19 +75,13 @@ public final class IndexFunctionTests extends TestExpr
                 assertEquals( "Cannot determine index if parent is not a list.", st.message() );
             }
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
 
     public void testIndexFunctionOnElementPropertyContent()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final Element child = element.getElement().content( true );
             final FunctionContext context = new ModelElementFunctionContext( child );
@@ -107,10 +93,6 @@ public final class IndexFunctionTests extends TestExpr
                 assertEquals( Status.Severity.ERROR, st.severity() );
                 assertEquals( "Cannot determine index if parent is not a list.", st.message() );
             }
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     

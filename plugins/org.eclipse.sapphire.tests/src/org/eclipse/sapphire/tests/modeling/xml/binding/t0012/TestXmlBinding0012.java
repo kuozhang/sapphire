@@ -32,17 +32,11 @@ public final class TestXmlBinding0012 extends SapphireTestCase
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) );
         
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) ) )
         {
             final TestListEntry x = element.getList().insert();
             x.setValue( "x" );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -52,9 +46,8 @@ public final class TestXmlBinding0012 extends SapphireTestCase
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) );
         
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
         {
             final ElementList<TestListEntry> list = element.getList();
             
@@ -64,10 +57,6 @@ public final class TestXmlBinding0012 extends SapphireTestCase
             final TestListEntry y = list.insert();
             y.setValue( "y" );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
@@ -76,9 +65,8 @@ public final class TestXmlBinding0012 extends SapphireTestCase
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) );
         
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
         {
             final ElementList<TestListEntry> list = element.getList();
             
@@ -111,10 +99,6 @@ public final class TestXmlBinding0012 extends SapphireTestCase
             assertSame( y, list.get( 2 ) );
             assertEquals( y.getValue().text(), "y" );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
@@ -123,9 +107,8 @@ public final class TestXmlBinding0012 extends SapphireTestCase
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
-        final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) );
         
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) ) )
         {
             final ElementList<TestListEntry> list = element.getList();
             
@@ -157,10 +140,6 @@ public final class TestXmlBinding0012 extends SapphireTestCase
             assertEquals( z.getValue().text(), "z" );
             assertSame( x, list.get( 2 ) );
             assertEquals( x.getValue().text(), "x" );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     

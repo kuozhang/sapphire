@@ -30,9 +30,7 @@ public final class FileBugReportHandler1 extends AbstractHandler
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final FileBugReportOp operation = FileBugReportOp.TYPE.instantiate();
-        
-        try
+        try( final FileBugReportOp operation = FileBugReportOp.TYPE.instantiate() )
         {
             final SapphireDialog dialog = new SapphireDialog
             (
@@ -44,10 +42,6 @@ public final class FileBugReportHandler1 extends AbstractHandler
             {
                 // Do something. User input is found in the bug report model.
             }
-        }
-        finally
-        {
-            operation.dispose();
         }
         
         return null;

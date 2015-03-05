@@ -28,9 +28,7 @@ public final class PossibleValuesTest extends SapphireTestCase
     
     public void testValueWithStaticPossibles()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final PossibleValuesService service = element.getValueWithStaticPossibles().service( PossibleValuesService.class );
             
@@ -48,19 +46,13 @@ public final class PossibleValuesTest extends SapphireTestCase
             element.setValueWithStaticPossibles( "b" );
             assertValidationOk( element.getValueWithStaticPossibles() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void testValueWithModelPossibles()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final ListEntry a = element.getEntries().insert();
             a.setValue( "a" );
@@ -95,19 +87,13 @@ public final class PossibleValuesTest extends SapphireTestCase
             
             assertEquals( set( "a", "b", "c", "d" ), service.values() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void testListWithStaticPossibles()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final PossibleValuesService service = element.getListWithStaticPossibles().service( PossibleValuesService.class );
             
@@ -127,19 +113,13 @@ public final class PossibleValuesTest extends SapphireTestCase
             entry.setValue( "b" );
             assertValidationOk( entry.getValue() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     @Test
     
     public void testListWithModelPossibles()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final ListEntry a = element.getEntries().insert();
             a.setValue( "a" );
@@ -175,10 +155,6 @@ public final class PossibleValuesTest extends SapphireTestCase
             assertValidationOk( entry.getValue() );
             
             assertEquals( set( "a", "b", "c", "d" ), service.values() );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

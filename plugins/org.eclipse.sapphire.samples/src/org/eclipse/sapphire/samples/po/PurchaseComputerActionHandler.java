@@ -27,9 +27,7 @@ public final class PurchaseComputerActionHandler extends SapphireActionHandler
     @Override
     protected Object run( final Presentation context )
     {
-        final PurchaseComputerOp op = PurchaseComputerOp.TYPE.instantiate();
-        
-        try
+        try( final PurchaseComputerOp op = PurchaseComputerOp.TYPE.instantiate() )
         {
             op.setPurchaseOrder( context.part().getLocalModelElement().nearest( PurchaseOrder.class ) );
             
@@ -42,10 +40,6 @@ public final class PurchaseComputerActionHandler extends SapphireActionHandler
             final WizardDialog dialog = new WizardDialog( ( (SwtPresentation) context ).shell(), wizard );
             
             dialog.open();
-        }
-        finally
-        {
-            op.dispose();
         }
         
         return null;

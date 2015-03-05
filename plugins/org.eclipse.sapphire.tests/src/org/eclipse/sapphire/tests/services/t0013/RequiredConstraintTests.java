@@ -28,9 +28,7 @@ public final class RequiredConstraintTests extends SapphireTestCase
     
     public void testRequiredConstraintValueProperty() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-     
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             assertNotNull( element.property( TestElement.PROP_VALUE ).service( RequiredConstraintService.class ) );
             assertNotNull( element.property( TestElement.PROP_VALUE_REQUIRED ).service( RequiredConstraintService.class ) );
@@ -66,19 +64,13 @@ public final class RequiredConstraintTests extends SapphireTestCase
             assertFact( element.getValueRequired(), "Must be specified" );
             assertFact( element.getValueRequiredExpr(), "Must be specified" );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
     
     public void testRequiredConstraintElementProperty() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             assertNotNull( element.property( TestElement.PROP_ELEMENT ).service( RequiredConstraintService.class ) );
             assertNotNull( element.property( TestElement.PROP_ELEMENT_REQUIRED ).service( RequiredConstraintService.class ) );
@@ -113,10 +105,6 @@ public final class RequiredConstraintTests extends SapphireTestCase
             assertNoFact( element.getElement(), "Must be specified" );
             assertFact( element.getElementRequired(), "Must be specified" );
             assertFact( element.getElementRequiredExpr(), "Must be specified" );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

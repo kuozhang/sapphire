@@ -31,9 +31,7 @@ public final class OpenCreateFileWizardHandler extends AbstractHandler
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final CreateFileOp operation = CreateFileOp.TYPE.instantiate();
-        
-        try
+        try( final CreateFileOp operation = CreateFileOp.TYPE.instantiate() )
         {
             final SapphireDialog selectRootDialog = new SapphireDialog
             (
@@ -53,10 +51,6 @@ public final class OpenCreateFileWizardHandler extends AbstractHandler
                 
                 createFileWizardDialog.open();
             }
-        }
-        finally
-        {
-            operation.dispose();
         }
         
         return null;

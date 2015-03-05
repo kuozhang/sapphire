@@ -82,9 +82,7 @@ public final class ElementPropertyTests extends SapphireTestCase
     
     public void OrderedPossibleTypes() throws Exception
     {
-        final OrderedPossibleTypesTestElement a = OrderedPossibleTypesTestElement.TYPE.instantiate();
-        
-        try
+        try( final OrderedPossibleTypesTestElement a = OrderedPossibleTypesTestElement.TYPE.instantiate() )
         {
             final PossibleTypesService unorderedPossibleTypesService = a.getElementWithUnorderedPossibleTypes().service( PossibleTypesService.class );
             
@@ -95,10 +93,6 @@ public final class ElementPropertyTests extends SapphireTestCase
             
             assertEquals( true, orderedPossibleTypesService.ordered() );
             assertSetOrder( orderedPossibleTypesService.types(), OrderedPossibleTypesTestElement.Child2.TYPE, OrderedPossibleTypesTestElement.Child1.TYPE, OrderedPossibleTypesTestElement.Child3.TYPE );
-        }
-        finally
-        {
-            a.dispose();
         }
     }
     

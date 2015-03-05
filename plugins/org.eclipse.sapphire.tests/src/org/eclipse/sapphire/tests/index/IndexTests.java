@@ -35,9 +35,7 @@ public final class IndexTests extends SapphireTestCase
     
     public void testSingleIndex()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final ElementList<ListEntry> list = element.getList();
             
@@ -81,19 +79,13 @@ public final class IndexTests extends SapphireTestCase
             testIndexLookup( index, "213", 0 );
             testIndexLookup( index, null, 2 );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
     
     public void testMultipleIndexes()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final ElementList<ListEntry> list = element.getList();
             
@@ -126,19 +118,13 @@ public final class IndexTests extends SapphireTestCase
             
             assertSame( stringValueIndex.element( "s137" ), integerValueIndex.element( "137" ) );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
     
     public void testIndexCaseSensitivity()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final ElementList<ListEntry> list = element.getList();
             
@@ -179,19 +165,13 @@ public final class IndexTests extends SapphireTestCase
             assertEquals( ignoreCaseIndex.elements( "abc97" ), ignoreCaseIndex.elements( "AbC97" ) );
             assertEquals( ignoreCaseIndex.elements( "abc97" ), ignoreCaseIndex.elements( "ABC97" ) );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
     
     public void testIndexEvents()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final ElementList<ListEntry> list = element.getList();
             
@@ -251,10 +231,6 @@ public final class IndexTests extends SapphireTestCase
             
             assertEquals( 0, log.size() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     /**
@@ -265,9 +241,7 @@ public final class IndexTests extends SapphireTestCase
     
     public void testIndexWithEqualityService()
     {
-        final TestElementWithEqualityService element = TestElementWithEqualityService.TYPE.instantiate();
-        
-        try
+        try( final TestElementWithEqualityService element = TestElementWithEqualityService.TYPE.instantiate() )
         {
             final ElementList<TestElementWithEqualityService.ListEntry> list = element.getList();
             
@@ -284,10 +258,6 @@ public final class IndexTests extends SapphireTestCase
             
             assertEquals( 2, index.elements( "b" ).size() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     /**
@@ -298,9 +268,7 @@ public final class IndexTests extends SapphireTestCase
     
     public void testIndexWithInheritedProperty()
     {
-        final TestElementWithInheritedProperty element = TestElementWithInheritedProperty.TYPE.instantiate();
-        
-        try
+        try( final TestElementWithInheritedProperty element = TestElementWithInheritedProperty.TYPE.instantiate() )
         {
             final ElementList<TestElementWithInheritedProperty.ListEntry> list = element.getList();
             
@@ -312,10 +280,6 @@ public final class IndexTests extends SapphireTestCase
             assertNotNull( index.element( "a" ) );
             assertNotNull( index.element( "b" ) );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
 
     /**
@@ -326,15 +290,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_ValueProperty_Null()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( (ValueProperty) null );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 
@@ -346,15 +304,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_ValueProperty_Foreign_1()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( TestElement.PROP_VALUE );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -366,15 +318,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_ValueProperty_Foreign_2()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( NestedListEntry.PROP_VALUE );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -386,16 +332,11 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_ValueProperty_Disposed()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
         final ElementList<ListEntry> list;
         
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             list = element.getList();
-        }
-        finally
-        {
-            element.dispose();
         }
 
         list.index( ListEntry.PROP_STRING_VALUE );
@@ -409,15 +350,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_String_Null()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( (String) null );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -429,15 +364,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_String_Unknown()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( "Value" );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 
@@ -449,15 +378,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_String_Path()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( "List/Value" );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -469,15 +392,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_String_List()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( "List" );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -489,16 +406,11 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_ElementList_Index_String_Disposed()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
         final ElementList<ListEntry> list;
         
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             list = element.getList();
-        }
-        finally
-        {
-            element.dispose();
         }
 
         list.index( ListEntry.PROP_STRING_VALUE );
@@ -512,16 +424,11 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_Index_Element_Disposed()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
         final Index<ListEntry> index;
         
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             index = element.getList().index( ListEntry.PROP_STRING_VALUE );
-        }
-        finally
-        {
-            element.dispose();
         }
 
         index.element( "a" );
@@ -535,16 +442,11 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_Index_Elements_Disposed()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
         final Index<ListEntry> index;
         
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             index = element.getList().index( ListEntry.PROP_STRING_VALUE );
-        }
-        finally
-        {
-            element.dispose();
         }
 
         index.elements( "a" );
@@ -558,15 +460,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_Index_Attach_Null()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( ListEntry.PROP_STRING_VALUE ).attach( null );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     
@@ -578,16 +474,11 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_Index_Attach_Disposed()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
         final Index<ListEntry> index;
         
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             index = element.getList().index( ListEntry.PROP_STRING_VALUE );
-        }
-        finally
-        {
-            element.dispose();
         }
 
         index.attach( new EventLog() );
@@ -601,15 +492,9 @@ public final class IndexTests extends SapphireTestCase
     
     public void testException_Index_Detach_Null()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getList().index( ListEntry.PROP_STRING_VALUE ).detach( null );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
     

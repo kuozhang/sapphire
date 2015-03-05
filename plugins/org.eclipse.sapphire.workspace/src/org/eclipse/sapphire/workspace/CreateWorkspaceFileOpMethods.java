@@ -89,21 +89,12 @@ public final class CreateWorkspaceFileOpMethods
                 
                 if( resource != null )
                 {
-                    try
+                    try( final Element element = type.instantiate( resource ) )
                     {
-                        final Element element = type.instantiate( resource );
-                        
-                        try
-                        {
-                            element.initialize();
-                            resource.save();
-                        }
-                        finally
-                        {
-                            element.dispose();
-                        }
+                        element.initialize();
+                        resource.save();
                     }
-                    catch( ResourceStoreException e )
+                    catch( final ResourceStoreException e )
                     {
                         return Status.createErrorStatus( e );
                     }

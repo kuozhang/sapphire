@@ -26,9 +26,7 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
     
     public void testDeclarativeValidationService() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-     
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             assertValidationOk( element.getMin() );
             assertValidationOk( element.getMax() );
@@ -49,19 +47,13 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
             assertValidationOk( element.getMin() );
             assertValidationOk( element.getMax() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
     
     public void testDeclarativeValidationService_MessageFunction() throws Exception
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             assertValidationOk( element.getPath() );
             
@@ -72,10 +64,6 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
             element.setPath( "/abc" );
             
             assertValidationOk( element.getPath() );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

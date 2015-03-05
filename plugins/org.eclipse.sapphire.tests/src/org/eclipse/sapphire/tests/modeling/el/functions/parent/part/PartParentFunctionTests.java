@@ -34,9 +34,7 @@ public final class PartParentFunctionTests extends TestExpr
     
     public void testPartParentFunction()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartParentFunctionTests.class ).dialog();
             final DialogPart dialogPart = new DialogPart();
@@ -57,10 +55,6 @@ public final class PartParentFunctionTests extends TestExpr
             {
                 dialogPart.dispose();
             }
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

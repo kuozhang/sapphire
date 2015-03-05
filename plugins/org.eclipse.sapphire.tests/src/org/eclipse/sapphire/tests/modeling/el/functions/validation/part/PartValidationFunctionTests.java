@@ -36,9 +36,7 @@ public final class PartValidationFunctionTests extends TestExpr
     
     public void testPartValidationFunction()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartValidationFunctionTests.class ).dialog();
             final SapphirePart part = new DialogPart();
@@ -63,10 +61,6 @@ public final class PartValidationFunctionTests extends TestExpr
             {
                 part.dispose();
             }
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

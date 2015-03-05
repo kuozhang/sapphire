@@ -26,9 +26,7 @@ public final class ModelElementClearTests extends SapphireTestCase
     
     public void testValuePropertyClear()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.setStringValueProperty( "abc" );
             element.setIntegerValueProperty( 123 );
@@ -45,19 +43,13 @@ public final class ModelElementClearTests extends SapphireTestCase
             assertNull( element.getIntegerValueProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
 
     public void testTransientPropertyClear()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.setTransientProperty( this );
             element.getListProperty().insert();
@@ -70,19 +62,13 @@ public final class ModelElementClearTests extends SapphireTestCase
             assertNull( element.getTransientProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
 
     public void testElementPropertyClear()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getElementProperty().content( true ).setValueProperty( "abc" );
             element.getListProperty().insert();
@@ -95,19 +81,13 @@ public final class ModelElementClearTests extends SapphireTestCase
             assertNull( element.getElementProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
 
     public void testImpliedElementPropertyClear()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getImpliedElementProperty().setValueProperty( "abc" );
             element.getListProperty().insert();
@@ -120,19 +100,13 @@ public final class ModelElementClearTests extends SapphireTestCase
             assertNull( element.getImpliedElementProperty().getValueProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
 
     public void testListPropertyClear()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.getListProperty().insert();
             element.getListProperty().insert();
@@ -146,19 +120,13 @@ public final class ModelElementClearTests extends SapphireTestCase
             assertEquals( 0, element.getListProperty().size() );
             assertEquals( "abc", element.getStringValueProperty().content() );
         }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     @Test
 
     public void testAllPropertiesClear()
     {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement element = TestElement.TYPE.instantiate() )
         {
             element.setStringValueProperty( "abc" );
             element.setIntegerValueProperty( 123 );
@@ -183,10 +151,6 @@ public final class ModelElementClearTests extends SapphireTestCase
             assertNull( element.getElementProperty().content() );
             assertNull( element.getImpliedElementProperty().getValueProperty().content() );
             assertEquals( 0, element.getListProperty().size() );
-        }
-        finally
-        {
-            element.dispose();
         }
     }
 

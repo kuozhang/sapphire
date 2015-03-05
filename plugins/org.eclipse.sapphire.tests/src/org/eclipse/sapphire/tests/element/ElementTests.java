@@ -32,9 +32,7 @@ public final class ElementTests extends SapphireTestCase
     
     public void HoldsElement() throws Exception
     {
-        final TestElement a = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement a = TestElement.TYPE.instantiate() )
         {
             final TestElement aa = a.getElement().content( true );
             
@@ -54,21 +52,11 @@ public final class ElementTests extends SapphireTestCase
             assertFalse( aa.holds( ab ) );
             assertFalse( ab.holds( aa ) );
             
-            final TestElement b = TestElement.TYPE.instantiate();
-            
-            try
+            try( final TestElement b = TestElement.TYPE.instantiate() )
             {
                 assertFalse( a.holds( b ) );
                 assertFalse( b.holds( a ) );
             }
-            finally
-            {
-                b.dispose();
-            }
-        }
-        finally
-        {
-            a.dispose();
         }
     }
 
@@ -76,9 +64,7 @@ public final class ElementTests extends SapphireTestCase
     
     public void HoldsProperty() throws Exception
     {
-        final TestElement a = TestElement.TYPE.instantiate();
-        
-        try
+        try( final TestElement a = TestElement.TYPE.instantiate() )
         {
             assertTrue( a.holds( a.getValue() ) );
             assertTrue( a.holds( a.getTransient() ) );
@@ -116,21 +102,11 @@ public final class ElementTests extends SapphireTestCase
             assertFalse( aa.holds( ab.getElement() ) );
             assertFalse( aa.holds( ab.getList() ) );
     
-            final TestElement b = TestElement.TYPE.instantiate();
-            
-            try
+            try( final TestElement b = TestElement.TYPE.instantiate() )
             {
                 assertFalse( a.holds( b.getValue() ) );
                 assertFalse( b.holds( a.getValue() ) );
             }
-            finally
-            {
-                b.dispose();
-            }
-        }
-        finally
-        {
-            a.dispose();
         }
     }
     
@@ -139,9 +115,8 @@ public final class ElementTests extends SapphireTestCase
     public void Suspend()
     {
         final EventLog log = new EventLog();
-        final TestElement a = TestElement.TYPE.instantiate();
         
-        try
+        try( final TestElement a = TestElement.TYPE.instantiate() )
         {
             a.attach( log, "*" );
             
@@ -185,10 +160,6 @@ public final class ElementTests extends SapphireTestCase
             assertPropertyContentEvent( log.event( 2 ), aa.getList().get( 1 ).getValue() );
             assertPropertyContentEvent( log.event( 3 ), aa.getElement() );
             assertPropertyContentEvent( log.event( 4 ), aa.getElement().content().getValue() );
-        }
-        finally
-        {
-            a.dispose();
         }
     }
 
