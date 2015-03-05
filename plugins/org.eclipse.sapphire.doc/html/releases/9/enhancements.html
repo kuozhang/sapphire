@@ -53,6 +53,7 @@
 <ol>
   <li><a href="#AutoCloseable">AutoCloseable</a></li>
   <ol type="A">
+    <li><a href="#AutoCloseable-DefinitionLoaderReference">DefinitionLoader.Reference</a></li>
     <li><a href="#AutoCloseable-Element">Element</a></li>
     <li><a href="#AutoCloseable-FunctionResult">FunctionResult</a></li>
   </ol>
@@ -73,7 +74,17 @@
 </ol>
 
 
-<h2><a name="AutoCloseable"><a name="AutoCloseable-Element">Element is AutoCloseable</a></a></h2>
+<h2><a name="AutoCloseable"><a name="AutoCloseable-DefinitionLoaderReference">DefinitionLoader.Reference is AutoCloseable</a></a></h2>
+
+<p>Taking advantage of Java 7, DefinitionLoader.Reference now extends AutoCloseable, so it can be used in the try-with-resources construct.</p>
+
+<pre class="source-code"><code>try( final DefinitionLoader.Reference&lt;DialogDef> def = DefinitionLoader.sdef( getClass() ).dialog() )
+{
+    ...
+}</code></pre>
+
+
+<h2><a name="AutoCloseable-Element">Element is AutoCloseable</a></h2>
 
 <p>Taking advantage of Java 7, Element now extends AutoCloseable, so it can be used in the try-with-resources construct.</p>
 

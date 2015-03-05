@@ -305,7 +305,7 @@ public final class DefinitionLoader
         }
     }
     
-    public static final class Reference<T extends Element> implements Disposable
+    public static final class Reference<T extends Element> implements Disposable, AutoCloseable
     {
         // Must reference loader to make sure it doesn't go away while this reference is still in use.
         // When the loader goes away, the sdef is disposed.
@@ -364,6 +364,12 @@ public final class DefinitionLoader
         {
             this.loader = null;
             this.def = null;
+        }
+        
+        @Override
+        public void close()
+        {
+            dispose();
         }
     }
 

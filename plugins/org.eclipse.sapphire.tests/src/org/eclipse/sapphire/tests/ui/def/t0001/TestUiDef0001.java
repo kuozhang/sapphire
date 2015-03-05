@@ -32,9 +32,7 @@ public final class TestUiDef0001 extends SapphireTestCase
     
     public void test()
     {
-        final DefinitionLoader.Reference<EditorPageDef> handle = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).page();
-        
-        try
+        try( final DefinitionLoader.Reference<EditorPageDef> handle = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).page() )
         {
             final MasterDetailsEditorPageDef page = (MasterDetailsEditorPageDef) handle.resolve();
             assertNotNull( page );
@@ -51,10 +49,6 @@ public final class TestUiDef0001 extends SapphireTestCase
             cl = (Class<?>) type.artifact();
             assertNotNull( cl );
             assertEquals( TestActionHandler.class, cl );
-        }
-        finally
-        {
-            handle.dispose();
         }
     }
 

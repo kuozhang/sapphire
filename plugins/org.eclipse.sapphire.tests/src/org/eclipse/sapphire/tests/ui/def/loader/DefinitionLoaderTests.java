@@ -31,24 +31,13 @@ public final class DefinitionLoaderTests extends SapphireTestCase
     
     public void testCacheInClassContext()
     {
-        final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).dialog();
-        
         try
-        {
+        (
+            final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).dialog();
             final DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).dialog();
-
-            try
-            {
-                assertSame( h1.resolve(), h2.resolve() );
-            }
-            finally
-            {
-                h2.dispose();
-            }
-        }
-        finally
+        )
         {
-            h1.dispose();
+            assertSame( h1.resolve(), h2.resolve() );
         }
     }
     
@@ -60,24 +49,13 @@ public final class DefinitionLoaderTests extends SapphireTestCase
         final ClassLoader cldr = cl.getClassLoader();
         final String pkg = cl.getPackage().getName();
         
-        final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( cldr ).sdef( pkg + ".TestDefinition" ).dialog();
-        
         try
-        {
+        (
+            final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( cldr ).sdef( pkg + ".TestDefinition" ).dialog();
             final DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( cldr ).sdef( pkg + ".TestDefinition" ).dialog();
-
-            try
-            {
-                assertSame( h1.resolve(), h2.resolve() );
-            }
-            finally
-            {
-                h2.dispose();
-            }
-        }
-        finally
+        )
         {
-            h1.dispose();
+            assertSame( h1.resolve(), h2.resolve() );
         }
     }
     
@@ -89,24 +67,13 @@ public final class DefinitionLoaderTests extends SapphireTestCase
         final Class<?> cl = getClass();
         final String pkg = cl.getPackage().getName();
         
-        final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( BundleBasedContext.adapt( bundle ) ).sdef( pkg + ".TestDefinition" ).dialog();
-        
         try
-        {
+        (
+            final DefinitionLoader.Reference<DialogDef> h1 = DefinitionLoader.context( BundleBasedContext.adapt( bundle ) ).sdef( pkg + ".TestDefinition" ).dialog();
             final DefinitionLoader.Reference<DialogDef> h2 = DefinitionLoader.context( BundleBasedContext.adapt( bundle ) ).sdef( pkg + ".TestDefinition" ).dialog();
-
-            try
-            {
-                assertSame( h1.resolve(), h2.resolve() );
-            }
-            finally
-            {
-                h2.dispose();
-            }
-        }
-        finally
+        )
         {
-            h1.dispose();
+            assertSame( h1.resolve(), h2.resolve() );
         }
     }
 
