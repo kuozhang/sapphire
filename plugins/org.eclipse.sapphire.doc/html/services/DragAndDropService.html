@@ -40,13 +40,8 @@
         IFile file = (IFile) context.object();
         List<String> locations = new ArrayList<String>();
 
-        InputStream in = null;
-
-        try
+        try( BufferedReader br = new BufferedReader( new InputStreamReader( file.getContents() ) );
         {
-            in = file.getContents();
-            final BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
-
             for( String line = br.readLine(); line != null; line = br.readLine() )
             {
                 if( line != null )
@@ -67,17 +62,6 @@
         catch( IOException e )
         {
             LoggingService.log( e );
-        }
-        finally
-        {
-            if( in != null )
-            {
-                try
-                {
-                    in.close();
-                }
-                catch( IOException e ) {}
-            }
         }
 
         if( ! locations.isEmpty() )

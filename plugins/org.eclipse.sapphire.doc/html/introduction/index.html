@@ -409,9 +409,7 @@ externally from Java code.</p>
 
 <p>Next we will write a little bit of Java code to open the dialog that we defined.</p>
 
-<pre class="source-code"><code>FileBugReportOp operation = FileBugReportOp.TYPE.instantiate();
-
-try
+<pre class="source-code"><code>try( FileBugReportOp operation = FileBugReportOp.TYPE.instantiate() )
 {
     SapphireDialog dialog = new SapphireDialog
     (
@@ -423,10 +421,6 @@ try
     {
         // Do something. User input is found in the bug report model.
     }
-}
-finally
-{
-    operation.dispose();
 }</code></pre>
 
 <p>Pretty simple, right? We create the model and then use the provided SapphireDialog class to instantiate the UI by
