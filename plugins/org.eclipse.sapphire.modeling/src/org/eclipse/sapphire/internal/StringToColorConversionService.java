@@ -47,7 +47,7 @@ public final class StringToColorConversionService extends ConversionService<Stri
         namedColors.put( "red", new Color( 255, 0, 0 ) );
         namedColors.put( "silver", new Color( 192, 192, 192 ) );
         namedColors.put( "teal", new Color( 0, 128, 128 ) );
-        namedColors.put( "white", new Color( 255, 255, 255 ) );
+        namedColors.put( "white", Color.WHITE );
         namedColors.put( "yellow", new Color( 255, 255, 0 ) );
     }
     
@@ -59,25 +59,18 @@ public final class StringToColorConversionService extends ConversionService<Stri
     @Override
     public Color convert( final String string )
     {
-        Color result = null;
+        Color result = namedColors.get( string.toLowerCase() );
         
-        if( string.startsWith( "#" ) && string.length() == 7 )
+        if( result == null )
         {
             try
             {
-                final int r = Integer.valueOf( string.substring( 1, 3 ), 16 );
-                final int g = Integer.valueOf( string.substring( 3, 5 ), 16 );
-                final int b = Integer.valueOf( string.substring( 5, 7 ), 16 );
-                result = new Color( r, g, b );
+                result = new Color( string );
             }
-            catch( NumberFormatException e )
+            catch( final IllegalArgumentException e )
             {
-                // Intentionally ignored.
+                // Intentionally ignored
             }
-        }
-        else 
-        {
-            result = namedColors.get( string.toLowerCase() );
         }
         
         return result;

@@ -16,6 +16,8 @@ import org.eclipse.sapphire.util.EqualsFactory;
 import org.eclipse.sapphire.util.HashCodeFactory;
 
 /**
+ * A representation of an RGB color.
+ * 
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -28,9 +30,16 @@ public final class Color
     private final int green;
     private final int blue;
     
-    public Color( final int red, 
-                  final int green, 
-                  final int blue )
+    /**
+     * Creates a new color object.
+     * 
+     * @param red the value of the red channel, between 0 and 255
+     * @param green the value of the green channel, between 0 and 255
+     * @param blue the value of the blue channel, between 0 and 255
+     * @throws IllegalArgumentException if a channel value is not within range
+     */
+    
+    public Color( final int red, final int green, final int blue )
     {
         if( red < 0 || red > 255 )
         {
@@ -54,15 +63,61 @@ public final class Color
         this.blue = blue;
     }
     
+    /**
+     * Creates a new color object from a string in #RRGGBB format, where RR, GG and BB are hex numbers
+     * from 00 to FF corresponding to red, green and blue components of the color.
+     * 
+     * @param color a string representation of a color
+     * @throws IllegalArgumentException if the color string is null or is not of the expected format
+     * @since 8.2
+     */
+    
+    public Color( final String color )
+    {
+        if( color == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( color.startsWith( "#" ) && color.length() == 7 )
+        {
+            this.red = Integer.valueOf( color.substring( 1, 3 ), 16 );
+            this.green = Integer.valueOf( color.substring( 3, 5 ), 16 );
+            this.blue = Integer.valueOf( color.substring( 5, 7 ), 16 );
+        }
+        else
+        {
+            throw new IllegalArgumentException( color );
+        }
+    }
+    
+    /**
+     * Returns the value of the red channel as an integer between 0 and 255.
+     * 
+     * @return the value of the red channel
+     */
+    
     public int red()
     {
         return this.red;
     }
         
+    /**
+     * Returns the value of the green channel as an integer between 0 and 255.
+     * 
+     * @return the value of the green channel
+     */
+    
     public int green()
     {
         return this.green;
     }
+    
+    /**
+     * Returns the value of the blue channel as an integer between 0 and 255.
+     * 
+     * @return the value of the blue channel
+     */
     
     public int blue()
     {
@@ -70,6 +125,7 @@ public final class Color
     }
     
     @Override
+    
     public boolean equals( final Object object )
     {
     	if( object instanceof Color )
@@ -82,12 +138,14 @@ public final class Color
     }
     
     @Override
+    
     public int hashCode()
     {
         return HashCodeFactory.start().add( this.red ).add( this.green ).add( this.blue ).result();
     }
 
     @Override
+    
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
