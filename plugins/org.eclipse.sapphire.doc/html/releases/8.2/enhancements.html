@@ -1,0 +1,94 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2015 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Enhancements in Sapphire 8.2</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code-compare 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+    .unaffected
+    {
+      color: #888888
+    }
+    .comment
+    {
+      color: #006600;
+      font-style: italic
+    }
+    .javadoc
+    {
+      color: #7F7F9F
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Enhancements in Sapphire 8.2</h1>
+
+<ol>
+  <li><a href="#Color">Color</a></li>
+</ol>
+
+
+<h2><a name="Color">Color</a></h2>
+
+<p>The Color class can now be directly constructed from #RRGGBB string representation.</p>
+
+<pre class="source-code"><code><span class="unaffected">public final class Color
+{</span>
+    <span class="javadoc">/**
+     * Creates a new color object from a string in #RRGGBB format, where RR, GG and BB are hex numbers
+     * from 00 to FF corresponding to red, green and blue components of the color.
+     * 
+     * @param color a string representation of a color
+     * @throws IllegalArgumentException if the color string is null or is not of the expected format
+     * @since 8.2
+     */</span>
+    
+    public Color( String color )</span>
+
+    <span class="unaffected">/**
+     * Creates a new color object.
+     * 
+     * @param red the value of the red channel, between 0 and 255
+     * @param green the value of the green channel, between 0 and 255
+     * @param blue the value of the blue channel, between 0 and 255
+     * @throws IllegalArgumentException if a channel value is not within range
+     */
+    
+    public Color( int red, int green, int blue )
+    
+}</span></code></pre>
+
+
+<div class="copyright">Copyright (c) 2015 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>
