@@ -20,6 +20,7 @@ import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Serialization;
 import org.eclipse.sapphire.Since;
@@ -29,7 +30,6 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityTarget;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -150,7 +150,7 @@ public interface PurchaseOrder extends Element
     
     @Type( base = PurchaseOrderEntry.class )
     @Label( standard = "entries" )
-    @CountConstraint( min = 1 )
+    @Length( min = 1 )
     
     ListProperty PROP_ENTRIES = new ListProperty( TYPE, "Entries" );
     

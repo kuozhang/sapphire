@@ -14,6 +14,7 @@ package org.eclipse.sapphire.sdk.extensibility;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Type;
@@ -23,7 +24,6 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -126,7 +126,7 @@ public interface ServiceDef extends Element
 
     @Type( base = ServiceContextRef.class )
     @Label( standard = "contexts" )
-    @CountConstraint( min = 1 )
+    @Length( min = 1 )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "context", type = ServiceContextRef.class ) )
     
     ListProperty PROP_CONTEXTS = new ListProperty(TYPE, "Contexts");

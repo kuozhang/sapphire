@@ -15,9 +15,9 @@ package org.eclipse.sapphire.ui.diagram.shape.def;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Type;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -62,7 +62,7 @@ public interface ContainerShapeDef extends ShapeDef
 		}
 	)
 	
-	@CountConstraint( min = 1 )
+	@Length( min = 1 )
 	@Label( standard = "content" )
 	
 	@XmlListBinding

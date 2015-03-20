@@ -17,11 +17,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * @deprecated Use @Length annotation instead @CountConstraint annotation.
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.FIELD )
+@Deprecated
 
 public @interface CountConstraint
 {

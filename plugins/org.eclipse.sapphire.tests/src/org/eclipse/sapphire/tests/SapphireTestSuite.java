@@ -19,6 +19,7 @@ import org.eclipse.sapphire.tests.conversion.ConversionTestSuite;
 import org.eclipse.sapphire.tests.element.ElementTests;
 import org.eclipse.sapphire.tests.index.IndexTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
+import org.eclipse.sapphire.tests.length.LengthConstraintTests;
 import org.eclipse.sapphire.tests.misc.TestMisc;
 import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
 import org.eclipse.sapphire.tests.observable.ObservableTests;
@@ -65,7 +66,8 @@ import org.junit.runners.Suite.SuiteClasses;
         TestMisc.class,
         UiTestSuite.class,
         UniqueValueTests.class,
-        WorkspaceTestSuite.class
+        WorkspaceTestSuite.class,
+        LengthConstraintTests.class
     }
 )
 

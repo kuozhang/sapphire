@@ -14,11 +14,11 @@ package org.eclipse.sapphire.ui.diagram.shape.def;
 
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Type;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -38,7 +38,7 @@ public interface GradientBackgroundDef extends BackgroundDef
 	// *** GradientSegments ***
 	
     @Type( base = GradientSegmentDef.class )
-    @CountConstraint( max = 2 )
+    @Length( max = 2 )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "gradient-segment", type = GradientSegmentDef.class ) )
                              
     ListProperty PROP_GRADIENT_SEGMENTS = new ListProperty( TYPE, "GradientSegments" );
