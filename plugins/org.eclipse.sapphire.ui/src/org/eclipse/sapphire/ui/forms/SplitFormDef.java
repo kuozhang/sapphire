@@ -13,10 +13,10 @@ package org.eclipse.sapphire.ui.forms;
 
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -58,7 +58,7 @@ public interface SplitFormDef extends FormComponentDef, MarginPresentation
     
     @Type( base = SplitFormSectionDef.class )
     @Label( standard = "sections" )
-    @CountConstraint( min = 2 )
+    @Length( min = 2 )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "block", type = SplitFormSectionDef.class ) )
     
     ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );

@@ -16,10 +16,10 @@ import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -54,7 +54,7 @@ public interface ShapeFactoryDef extends ShapeDef
     // *** Cases ***
     
     @Type( base = ShapeFactoryCaseDef.class )
-    @CountConstraint( min = 1 )
+    @Length( min = 1 )
     @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "case", type = ShapeFactoryCaseDef.class ) )
                              
     ListProperty PROP_CASES = new ListProperty( TYPE, "Cases" );

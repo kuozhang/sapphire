@@ -51,8 +51,34 @@
 <h1>Enhancements in Sapphire 8.2</h1>
 
 <ol>
+  <li><a href="#LengthConstraints">Length Constraints</a></li>
   <li><a href="#Color">Color</a></li>
 </ol>
+
+
+<h2><a name="LengthConstraints">Length Constraints</a></h2>
+
+<p>The new @Length annotation allows min and max constraints to be specified for the text length of a value property or
+the item count of a list property. It replaces the now deprecated @CountConstraint annotation that applies
+only to list properties.</p>
+
+<pre class="source-code"><code><span class="unaffected">// *** Comment ***</span>
+
+@Length( max = 500 )
+
+<span class="unaffected">ValueProperty PROP_COMMENT = new ValueProperty( TYPE, "Comment" );
+
+Value<String> getComment();
+void setComment( String value );</span></code></pre>
+
+<pre class="source-code"><code><span class="unaffected">// *** Entries ***
+
+@Type( base = PurchaseOrderEntry.class )</span>
+@Length( min = 1, max = 100 )
+
+<span class="unaffected">ListProperty PROP_ENTRIES = new ListProperty( TYPE, "Entries" );
+
+ElementList&lt;PurchaseOrderEntry> getEntries();</span></code></pre>
 
 
 <h2><a name="Color">Color</a></h2>
