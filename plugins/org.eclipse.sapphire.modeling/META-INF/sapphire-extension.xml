@@ -92,7 +92,7 @@
     <service>
         <condition>org.eclipse.sapphire.internal.LengthValidationServiceForList$Condition</condition>
         <context>Sapphire.Property.Instance</context>
-        <description>An implementation of ValidationService that produces a validation error when a list property's item count is outside of the constraints specified by the @Length annotation or the deprecated @CountConstraint annotation.</description>
+        <description>An implementation of ValidationService that produces a validation error when a list property's item count is outside of the constraints specified by the @Length annotation.</description>
         <id>Sapphire.ValidationService.Length.List</id>
         <implementation>org.eclipse.sapphire.internal.LengthValidationServiceForList</implementation>
     </service>
@@ -284,7 +284,7 @@
     <service>
         <condition>org.eclipse.sapphire.internal.LengthFactsServiceForList$Condition</condition>
         <context>Sapphire.Property.MetaModel</context>
-        <description>An implementation of FactsService that creates fact statements about a list property's item count constraints by using the semantical information specified by the @Length annotation or the deprecated @CountConstraint annotation.</description>
+        <description>An implementation of FactsService that creates fact statements about a list property's item count constraints by using the semantical information specified by the @Length annotation.</description>
         <id>Sapphire.FactsService.Length.List</id>
         <implementation>org.eclipse.sapphire.internal.LengthFactsServiceForList</implementation>
     </service>

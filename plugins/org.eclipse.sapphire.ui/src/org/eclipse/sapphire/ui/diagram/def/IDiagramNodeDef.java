@@ -19,6 +19,7 @@ import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Type;
@@ -28,7 +29,6 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -131,7 +131,7 @@ public interface IDiagramNodeDef extends PartDef, IDiagramDimension, PropertiesV
     @Type( base = ToolPaletteImageDef.class )
     @Label( standard = "tool palette images" )
     @XmlListBinding( path = "", mappings = @XmlListBinding.Mapping( element = "tool-palette-image", type = ToolPaletteImageDef.class ) )
-    @CountConstraint( max = 2 )
+    @Length( max = 2 )
 
     ListProperty PROP_TOOL_PALETTE_IMAGES = new ListProperty( TYPE, "ToolPaletteImages" );
     

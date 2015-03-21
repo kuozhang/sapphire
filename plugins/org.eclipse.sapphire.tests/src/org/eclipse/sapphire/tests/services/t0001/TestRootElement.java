@@ -22,7 +22,6 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Fact;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
@@ -146,42 +145,6 @@ public interface TestRootElement extends Element
     ValueProperty PROP_READ_ONLY = new ValueProperty( TYPE, "ReadOnly" );
     
     Value<String> getReadOnly();
-    
-    // *** CountConstraintAtLeastOne ***
-    
-    @Type( base = EmptyModelElement.class )
-    @CountConstraint( min = 1 )
-    
-    ListProperty PROP_COUNT_CONSTRAINT_AT_LEAST_ONE = new ListProperty( TYPE, "CountConstraintAtLeastOne" );
-    
-    ElementList<EmptyModelElement> getCountConstraintAtLeastOne();
-    
-    // *** CountConstraintMin ***
-    
-    @Type( base = EmptyModelElement.class )
-    @CountConstraint( min = 2 )
-    
-    ListProperty PROP_COUNT_CONSTRAINT_MIN = new ListProperty( TYPE, "CountConstraintMin" );
-    
-    ElementList<EmptyModelElement> getCountConstraintMin();
-    
-    // *** CountConstraintMax ***
-    
-    @Type( base = EmptyModelElement.class )
-    @CountConstraint( max = 200 )
-    
-    ListProperty PROP_COUNT_CONSTRAINT_MAX = new ListProperty( TYPE, "CountConstraintMax" );
-    
-    ElementList<EmptyModelElement> getCountConstraintMax();
-    
-    // *** CountConstraintMinMax ***
-    
-    @Type( base = EmptyModelElement.class )
-    @CountConstraint( min = 2, max = 200 )
-
-    ListProperty PROP_COUNT_CONSTRAINT_MIN_MAX = new ListProperty( TYPE, "CountConstraintMinMax" );
-    
-    ElementList<EmptyModelElement> getCountConstraintMinMax();
     
     // *** AbsolutePath ***
     

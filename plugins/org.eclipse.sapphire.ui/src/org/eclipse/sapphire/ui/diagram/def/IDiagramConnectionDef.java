@@ -17,11 +17,11 @@ import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Type;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -92,7 +92,7 @@ public interface IDiagramConnectionDef extends PartDef, PropertiesViewContributo
     @Type( base = ToolPaletteImageDef.class )
     @Label( standard = "tool palette images" )
     @XmlListBinding( path = "", mappings = @XmlListBinding.Mapping( element = "tool-palette-image", type = ToolPaletteImageDef.class ) )
-    @CountConstraint( max = 2 )
+    @Length( max = 2 )
     @Enablement( expr = "${!ImplicitConnection}" )
 
     ListProperty PROP_TOOL_PALETTE_IMAGES = new ListProperty( TYPE, "ToolPaletteImages" );

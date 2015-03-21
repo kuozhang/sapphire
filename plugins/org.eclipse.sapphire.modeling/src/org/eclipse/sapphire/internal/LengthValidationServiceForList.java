@@ -20,19 +20,16 @@ import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * An implementation of ValidationService that produces a validation error when a list property's item count
- * is outside of the constraints specified by the @Length annotation or the deprecated @CountConstraint annotation.
+ * is outside of the constraints specified by the @Length annotation.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-
-@SuppressWarnings( "deprecation" )
 
 public final class LengthValidationServiceForList extends ValidationService
 {
@@ -46,18 +43,8 @@ public final class LengthValidationServiceForList extends ValidationService
         final PropertyDef property = context( PropertyDef.class );
         final Length length = property.getAnnotation( Length.class );
         
-        if( length != null )
-        {
-            this.min = length.min();
-            this.max = length.max();
-        }
-        else
-        {
-            final CountConstraint count = property.getAnnotation( CountConstraint.class );
-            
-            this.min = count.min();
-            this.max = count.max();
-        }
+        this.min = length.min();
+        this.max = length.max();
     }
 
     @Override
@@ -98,10 +85,7 @@ public final class LengthValidationServiceForList extends ValidationService
             if( property != null )
             {
                 final Length length = property.getAnnotation( Length.class );
-                final CountConstraint count = property.getAnnotation( CountConstraint.class );
-                
-                return ( length != null && ( length.min() > 0 || length.max() < Integer.MAX_VALUE ) ) ||
-                       ( count != null && ( count.min() > 0 || count.max() < Integer.MAX_VALUE ) );
+                return length != null && ( length.min() > 0 || length.max() < Integer.MAX_VALUE );
             }
             
             return false;

@@ -104,34 +104,6 @@ public final class TestServices0001 extends SapphireTestCase
     
     @Test
     
-    public void testCountConstraintAtLeastOne() throws Exception
-    {
-        test( TestRootElement.PROP_COUNT_CONSTRAINT_AT_LEAST_ONE, "Must have at least one" );
-    }
-    
-    @Test
-    
-    public void testCountConstraintMin() throws Exception
-    {
-        test( TestRootElement.PROP_COUNT_CONSTRAINT_MIN, "Must have at least 2 items" );
-    }
-    
-    @Test
-    
-    public void testCountConstraintMax() throws Exception
-    {
-        test( TestRootElement.PROP_COUNT_CONSTRAINT_MAX, "Must have at most 200 items" );
-    }
-    
-    @Test
-    
-    public void testCountConstraintMinMax() throws Exception
-    {
-        test( TestRootElement.PROP_COUNT_CONSTRAINT_MIN_MAX, "Must have at least 2 items", "Must have at most 200 items" );
-    }
-    
-    @Test
-    
     public void testAbsolutePath() throws Exception
     {
         test( TestRootElement.PROP_ABSOLUTE_PATH, "Must be an absolute path" );

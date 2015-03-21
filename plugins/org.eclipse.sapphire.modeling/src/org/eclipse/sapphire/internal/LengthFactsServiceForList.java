@@ -18,20 +18,16 @@ import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
  * An implementation of FactsService that creates fact statements about a list property's item count
- * constraints by using the semantical information specified by the @Length annotation or the deprecated
- * @CountConstraint annotation.
+ * constraints by using the semantical information specified by the @Length annotation.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-
-@SuppressWarnings( "deprecation" )
 
 public final class LengthFactsServiceForList extends FactsService
 {
@@ -59,18 +55,8 @@ public final class LengthFactsServiceForList extends FactsService
         final PropertyDef property = context( PropertyDef.class );
         final Length length = property.getAnnotation( Length.class );
         
-        if( length != null )
-        {
-            this.min = length.min();
-            this.max = length.max();
-        }
-        else
-        {
-            final CountConstraint count = property.getAnnotation( CountConstraint.class );
-            
-            this.min = count.min();
-            this.max = count.max();
-        }
+        this.min = length.min();
+        this.max = length.max();
     }
 
     @Override
@@ -103,10 +89,7 @@ public final class LengthFactsServiceForList extends FactsService
             if( property != null )
             {
                 final Length length = property.getAnnotation( Length.class );
-                final CountConstraint count = property.getAnnotation( CountConstraint.class );
-                
-                return ( length != null && ( length.min() > 0 || length.max() < Integer.MAX_VALUE ) ) ||
-                       ( count != null && ( count.min() > 0 || count.max() < Integer.MAX_VALUE ) );
+                return length != null && ( length.min() > 0 || length.max() < Integer.MAX_VALUE );
             }
             
             return false;

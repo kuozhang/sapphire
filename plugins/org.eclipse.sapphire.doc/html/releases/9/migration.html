@@ -52,11 +52,38 @@ to Sapphire 9 from a prior release. Only changes from the previous major release
 <p>Table of Contents</p>
 
 <ol>
+  <li><a href="#CountConstraint">CountConstraint</a></li>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
   <li><a href="#PossibleTypesServiceData">PossibleTypesServiceData</a></li>
   <li><a href="#StringUtil">StringUtil</a></li>
   <li><a href="#Type">Type</a></li>
 </ol>
+
+
+<h2><a name="CountConstraint">CountConstraint</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.annotations.CountConstraint</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>Length</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">@</span>CountConstraint<span class="unaffected">( ... )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">@</span>Length<span class="unaffected">( ... )</span></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="PossibleTypesService">PossibleTypesService</a></h2>
