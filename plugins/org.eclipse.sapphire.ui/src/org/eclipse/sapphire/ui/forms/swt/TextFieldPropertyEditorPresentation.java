@@ -22,6 +22,8 @@ import static org.eclipse.sapphire.ui.forms.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhindent;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
@@ -39,6 +41,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Length;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Sapphire;
@@ -71,6 +74,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
@@ -119,11 +123,12 @@ public class TextFieldPropertyEditorPresentation extends ValuePropertyEditorPres
     {
         final PropertyEditorPart part = part();
         final Value<?> property = (Value<?>) part.property();
+        final ValueProperty pdef = property.definition();
         
-        final boolean isLongString = property.definition().hasAnnotation( LongString.class );
-        final boolean isDeprecated = property.definition().hasAnnotation( Deprecated.class );
-        final boolean isReadOnly = ( property.definition().isReadOnly() || part.getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );
-        final boolean isSensitiveData = property.definition().hasAnnotation( SensitiveData.class );
+        final boolean isLongString = pdef.hasAnnotation( LongString.class );
+        final boolean isDeprecated = pdef.hasAnnotation( Deprecated.class );
+        final boolean isReadOnly = ( pdef.isReadOnly() || part.getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );
+        final boolean isSensitiveData = pdef.hasAnnotation( SensitiveData.class );
         
         final SapphireActionGroup actions = getActions();
         final SapphireActionHandler jumpActionHandler = actions.getAction( ACTION_JUMP ).getFirstActiveHandler();
@@ -284,6 +289,26 @@ public class TextFieldPropertyEditorPresentation extends ValuePropertyEditorPres
         this.textField.setData( DATA_BINDING, this.binding );
         
         addControl( this.textField );
+        
+        final Length lengthAnnotation = pdef.getAnnotation( Length.class );
+        
+        if( lengthAnnotation != null && lengthAnnotation.max() < Integer.MAX_VALUE )
+        {
+            final boolean span = part().getSpanBothColumns();
+            
+            if( ! span )
+            {
+                new Label( parent, SWT.NONE );
+            }
+            
+            final TextCapacityFeedback textCapacityFeedback 
+                = new TextCapacityFeedback( parent, this.textField, lengthAnnotation.max() );
+            
+            textCapacityFeedback.setLayoutData( gdhspan( gdhindent( gdhfill(), 9 ), span ? 2 : 1 ) );
+            
+            addControl( textCapacityFeedback );
+            decorator.addEditorControl( textCapacityFeedback );
+        }
         
         // Hookup property editor listeners.
         
