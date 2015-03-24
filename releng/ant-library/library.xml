@@ -114,6 +114,7 @@
 
   <target name="init-jdk" depends="init-library">
     <init-jdk version="6"/>
+    <init-jdk version="7"/>
   </target>
 
 
@@ -395,6 +396,7 @@
         <arg value="-DallowBinaryCycles=true" />
         <arg value="-DcompilerArg=${pde.build.compiler.arg}"/>
         <arg value="-DJavaSE-1.6=${java.6.system.classpath}"/>
+        <arg value="-DJavaSE-1.7=${java.7.system.classpath}"/>
         <arg value="-DjavacFailOnError=true"/>
         <arg value="-DjavacVerbose=${javacVerbose}"/>
         <arg value="-DjavacDebugInfo=true"/>
