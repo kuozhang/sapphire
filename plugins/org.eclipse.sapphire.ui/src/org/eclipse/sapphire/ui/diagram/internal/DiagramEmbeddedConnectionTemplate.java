@@ -66,7 +66,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
         this.propertyName = this.bindingDef.getProperty().content();
-        this.connListProperty = (ListProperty)nodeProperty.getType().property(this.propertyName);
+        this.connListProperty = (ListProperty)this.nodeTemplate.getNodeType().property(this.propertyName);
         
         initConnPartListener();
         
@@ -87,17 +87,20 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         ElementList<Element> srcNodeList = getModelElement().property(nodeProperty);
         for (Element srcNodeModel : srcNodeList)
         {
-            PropertyDef connProp = srcNodeModel.property(this.propertyName).definition();
-            if (connProp instanceof ListProperty)
-            {
-                ListProperty connListProperty = (ListProperty)connProp;
-                ElementList<?> connList = srcNodeModel.property(connListProperty);
-                for (Element endpointModel : connList)
-                {
-                	createNewConnectionPart(endpointModel, srcNodeModel);                	
-                }                
-                addModelListener(srcNodeModel);
-            }
+        	if (srcNodeModel.type() == this.nodeTemplate.getNodeType())
+        	{
+	            PropertyDef connProp = srcNodeModel.property(this.propertyName).definition();
+	            if (connProp instanceof ListProperty)
+	            {
+	                ListProperty connListProperty = (ListProperty)connProp;
+	                ElementList<?> connList = srcNodeModel.property(connListProperty);
+	                for (Element endpointModel : connList)
+	                {
+	                	createNewConnectionPart(endpointModel, srcNodeModel);                	
+	                }                
+	                addModelListener(srcNodeModel);
+	            }
+        	}
         }                
     }
     
