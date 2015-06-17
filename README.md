@@ -1,5 +1,6 @@
 ### Introduction
 
+
 [Sapphire](http://www.eclipse.org/sapphire/) is a user interface development framework that improves productivity.
 Instead of focusing on individual widgets, layouts and data binding, the developers
 focus on modeling the semantics of the data and declaring the general intent of
