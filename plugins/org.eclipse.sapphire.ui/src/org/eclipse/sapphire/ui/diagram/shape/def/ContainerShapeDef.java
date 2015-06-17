@@ -53,6 +53,9 @@ public interface ContainerShapeDef extends ShapeDef
 		possible =
 		{
 			TextDef.class, 
+			// add by tds
+			CspActuatorDef.class,
+			//
 			ImageDef.class, 
 			ValidationMarkerDef.class, 
 		    RectangleDef.class,
@@ -71,6 +74,9 @@ public interface ContainerShapeDef extends ShapeDef
 	    mappings = 
 	    {
 	        @XmlListBinding.Mapping( element = "text", type = TextDef.class ),
+	        // add by tds
+	        @XmlListBinding.Mapping( element = "cspactuator", type = CspActuatorDef.class ),
+	        //
 	        @XmlListBinding.Mapping( element = "image", type = ImageDef.class ),
 	        @XmlListBinding.Mapping( element = "validation-marker", type = ValidationMarkerDef.class ),
 	        @XmlListBinding.Mapping( element = "rectangle", type = RectangleDef.class ),

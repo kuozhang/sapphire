@@ -152,7 +152,9 @@ public class StandardEmbeddedConnectionPart extends StandardDiagramConnectionPar
     protected void handleModelPropertyChange(final PropertyEvent event)
     {
         final PropertyDef property = event.property().definition();
-        if (property.name().equals(this.endpointDef.getProperty().content()))
+        // edit by tds 忽略大小写
+        //if (property.name().equals(this.endpointDef.getProperty().content()))
+        if (property.name().equalsIgnoreCase(this.endpointDef.getProperty().content()))
         {
         	this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
             notifyConnectionEndpointUpdate();

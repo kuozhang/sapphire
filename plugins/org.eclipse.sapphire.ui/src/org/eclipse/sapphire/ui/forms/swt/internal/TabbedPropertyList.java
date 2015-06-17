@@ -379,7 +379,10 @@ public class TabbedPropertyList
                 e.gc.drawLine(bounds.width - 1, 0, bounds.width - 1,
                     bounds.height - 1);
             } else {
-                throw new IllegalStateException();
+            	// edit by tds
+            	//throw new IllegalStateException();
+                return;
+                //
             }
 
             if (isUpScrollRequired()) {
@@ -716,7 +719,9 @@ public class TabbedPropertyList
     public Point computeSize(int wHint, int hHint, boolean changed) {
         Point result = super.computeSize(hHint, wHint, changed);
         if (this.widestLabelIndex == -1) {
-            throw new IllegalStateException();
+        	// edit by tds
+            //throw new IllegalStateException();
+            //
         } else {
             Item widestTab = this.elements[this.widestLabelIndex].getTabItem();
             int width = getTextDimension(widestTab.getText()).x + INDENT;
@@ -992,8 +997,16 @@ public class TabbedPropertyList
 
         // layout so that we have enough space for the new labels
         Composite grandparent = getParent().getParent();
+        // add by tds
+        try {
+        //
         grandparent.layout(true);
         layout(true);
+        // add by tds
+        } catch (Exception e) {
+        	// do nothing
+        }
+        //
     }
 
     /**

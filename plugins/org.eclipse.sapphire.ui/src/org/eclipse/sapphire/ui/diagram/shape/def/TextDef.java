@@ -85,4 +85,18 @@ public interface TextDef extends ShapeDef
     void setTruncatable( String value );
     void setTruncatable( Boolean value );
     
+    // add by tds
+    // *** editable ***
+    
+    @Type( base = Boolean.class )
+    @XmlBinding( path = "editable" )
+    @DefaultValue( text = "true" )
+    @Label( standard = "editable")
+    
+    ValueProperty PROP_EDITABLE = new ValueProperty(TYPE, "editable");
+    
+    Value<Boolean> isEditable();
+    void setEditable( String value );
+    void setEditable( Boolean value );
+    //
 }

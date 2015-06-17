@@ -25,8 +25,11 @@ import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glspacing;
 import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.runOnDisplayThread;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.jface.fieldassist.AutoCompleteField;
+import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
@@ -122,6 +125,18 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         final ValueNormalizationService valueNormalizationService = property.service( ValueNormalizationService.class );
         
         final MutableReference<List<PossibleValue>> possibleValuesRef = new MutableReference<List<PossibleValue>>();
+        // add by tds
+        final PossibleValue.Factory factory = PossibleValue.factory( property );
+        final List<PossibleValue> possibleValues = factory.entries();
+        final String[] contentForCombo = new String[ possibleValues.size() ];
+        for( int i = 0, n = possibleValues.size(); i < n; i++ )
+        {
+            contentForCombo[ i ] = possibleValues.get( i ).label();
+        }
+        if( this.style == PopUpListFieldStyle.EDITABLE ) {
+        	new AutoCompleteField(combo, new ComboContentAdapter(), contentForCombo);
+    	}
+        //
         
         final Runnable updateComboSelectionOp = new Runnable()
         {
@@ -299,7 +314,8 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                             }
                         }
                         
-                        if( value == null )
+                        // edit by tds 以combo值为准
+                        if( value == null || PopUpListFieldPropertyEditorPresentation.this.style == PopUpListFieldStyle.EDITABLE)
                         {
                             value = combo.getText().trim();
                         }
@@ -308,6 +324,13 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                         {
                             value = null;
                         }
+                        // add by tds: 为了防止失去form的重画导致当前combo失去焦点，先检验输入值的合法性，非法时不进行赋值
+                        if (value != null && contentForCombo != null && PopUpListFieldPropertyEditorPresentation.this.style == PopUpListFieldStyle.EDITABLE) {
+                        	if (!Arrays.asList(contentForCombo).contains(value)) {
+                        		return;
+                        	}
+                        }
+                        //
     
                         setPropertyValue( value );
                     }

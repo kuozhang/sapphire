@@ -37,7 +37,9 @@ public final class EnumPropertyEditorPresentationFactory extends PropertyEditorP
             
             if( enumValues.length > 3 )
             {
-                return new PopUpListFieldPropertyEditorPresentation( part, parent, composite, PopUpListFieldStyle.STRICT );
+            	// edit by tds：改成可编辑
+                return new PopUpListFieldPropertyEditorPresentation( part, parent, composite, PopUpListFieldStyle.EDITABLE/*PopUpListFieldStyle.STRICT*/ );
+                //
             }
             else
             {

@@ -100,6 +100,11 @@ public class TextPresentation extends ShapePresentation
 
 	private void refresh() {
 		TextFigure textFigure = (TextFigure)getFigure();
+		// add by tds
+		if (textFigure == null) {
+			return;
+		}
+		//
 		textFigure.setText(getContent());
 		// TODO necessary? DiagramNodeEditPart.refreshNodeBounds()
 	}

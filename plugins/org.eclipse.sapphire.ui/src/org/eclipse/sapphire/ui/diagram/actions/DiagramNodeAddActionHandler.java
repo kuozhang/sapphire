@@ -18,6 +18,8 @@ import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.cspext.CspNodeAddHandler;
+import org.eclipse.sapphire.ui.cspext.CspSapphireUIUtil;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -59,6 +61,12 @@ public class DiagramNodeAddActionHandler extends SapphireActionHandler
 	@Override
 	protected Object run(Presentation context) 
 	{
+		// add by tian
+	    CspNodeAddHandler handler = CspSapphireUIUtil.getNodeAddAnno(this.nodeTemplate);
+	    if (handler != null) {
+	        return handler.handle(context, nodeTemplate);
+	    }
+		//
     	SapphireDiagramEditorPagePart diagramPart = 
     			(SapphireDiagramEditorPagePart)this.nodeTemplate.parent();
 

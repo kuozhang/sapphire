@@ -88,47 +88,48 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 			}
 			else if( editPart instanceof DiagramNodeEditPart )
 			{
-				DiagramNodeEditPart nodePart = (DiagramNodeEditPart)editPart;
+				// edit by tds: 编辑器有滚动条时，右键菜单不出现，恢复到7.4代码
+				/**DiagramNodeEditPart nodePart = (DiagramNodeEditPart)editPart;
 				if (isMouseOnEditPart(nodePart))
-				{
+				{*/
 					context = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
 					presentation = ((DiagramNodeEditPart)editPart).getPresentation();
-				}
+				/**}
 				else
 				{
 					this.editor.selectParts(emptySelection);
 					context = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
 					presentation = this.editor.getDiagramPresentation();
-				}
+				}*/
 			}
 			else if (editPart instanceof ShapeEditPart)
 			{
-				DiagramNodeEditPart nodePart = ((ShapeEditPart)editPart).getNodeEditPart();
+				/**DiagramNodeEditPart nodePart = ((ShapeEditPart)editPart).getNodeEditPart();
 				if (isMouseOnEditPart(nodePart))
-				{
+				{*/
 					context = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE;
 					presentation = ((ShapeEditPart)editPart).getShapePresentation();
-				}
+				/**}
 				else
 				{
 					this.editor.selectParts(emptySelection);
 					context = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
 					presentation = this.editor.getDiagramPresentation();
-				}
+				}*/
 			}
 			else if( editPart instanceof DiagramConnectionEditPart )
 			{
-				if (isMouseOnEditPart(editPart))
-				{
+				/**if (isMouseOnEditPart(editPart))
+				{*/
 					context = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
 					presentation = ((DiagramConnectionEditPart)editPart).getPresentation();
-				}
+				/**}
 				else
 				{
 					this.editor.selectParts(emptySelection);
 					context = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
 					presentation = this.editor.getDiagramPresentation();
-				}
+				}*/
 				
 			}
 			else if( editPart instanceof DiagramConnectionLabelEditPart )
@@ -144,15 +145,15 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 		}
 		else if( selection.size() > 1 )
 		{
-			if (isMouseOnEditParts(selection))
-			{
+			/**if (isMouseOnEditParts(selection))
+			{*/
 			    context = SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS;
-			}
+			/**}
 			else
 			{
 				this.editor.selectParts(emptySelection);
 				context = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;				
-			}
+			}*/
 			presentation = this.editor.getDiagramPresentation();
 		    part = this.editor.getPart();			
 		}

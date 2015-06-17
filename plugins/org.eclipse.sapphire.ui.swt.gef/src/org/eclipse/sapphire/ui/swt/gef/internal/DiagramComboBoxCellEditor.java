@@ -54,6 +54,9 @@ public class DiagramComboBoxCellEditor extends ComboBoxCellEditor
 		final String[] contentForCombo = new String[possibleValues.size()];
 		possibleValues.toArray(contentForCombo);
 		setItems(contentForCombo);
+		// add by tds
+		new AutoCompleteField(combo, new CComboContentAdapter(), contentForCombo);
+		//
 	}
 	
     @Override

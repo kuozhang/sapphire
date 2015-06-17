@@ -15,7 +15,9 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 
 /**
@@ -86,6 +88,15 @@ public class CreateConnectionCommand extends Command {
 		// activate direct editing after object creation
 		if (connection != null && connection.canEditLabel()) 
 		{
+			// add by tds
+			if (connection instanceof StandardDiagramConnectionPart) {
+				IDiagramExplicitConnectionBindingDef bindingDef = ((StandardDiagramConnectionPart)connection).getBindingDef();
+		         if (bindingDef != null && !bindingDef.isLabelEditable().content())
+		         {
+		        	 return;
+		         }
+			}
+	    	//
 			diagramPart.selectAndDirectEdit(connection);
 		}
 	}

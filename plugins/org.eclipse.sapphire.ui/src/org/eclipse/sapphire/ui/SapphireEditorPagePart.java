@@ -30,6 +30,7 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
+import org.eclipse.sapphire.ui.cspext.CspSapphireUIUtil;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -104,6 +105,12 @@ public class SapphireEditorPagePart
             final StringBuilder key = new StringBuilder();
             
             final IEditorInput editorInput = adapt( SapphireEditor.class ).getEditorInput();
+            // add by tds
+            File file = null;
+            if (adapt(SapphireEditor.class).getClass().getName().contains("com.chanjet.csp.ide")) {
+            	 file = CspSapphireUIUtil.getStateFile(editorInput);
+            } else {
+            //
             
             key.append( editorInput.getClass().getName() );
             key.append( '#' );
@@ -128,9 +135,12 @@ public class SapphireEditorPagePart
             
             final String digest = createStringDigest( key.toString() );
             
-            File file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+            file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
             file = new File( file, ".metadata/.plugins/org.eclipse.sapphire.ui/state" );
             file = new File( file, digest );
+            // add by tds
+            }
+            //
             
             final JavaType persistedStateElementJavaType = definition().getPersistentStateElementType().target();
             

@@ -29,6 +29,17 @@ import org.eclipse.sapphire.ui.def.SapphireActionType;
 public abstract class SapphireActionHandler extends SapphireActionSystemPart
 {
     private SapphireAction action;
+    // add by tds
+  	protected String CspParams;
+  	
+      public String getCspParams() {
+  		return CspParams;
+  	}
+
+  	public void setCspParams(String CspParams) {
+  		this.CspParams = CspParams;
+  	}
+  	//
 
     public void init( final SapphireAction action,
                       final ActionHandlerDef def )

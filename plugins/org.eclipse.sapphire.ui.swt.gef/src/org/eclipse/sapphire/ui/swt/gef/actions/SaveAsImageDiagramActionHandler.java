@@ -14,6 +14,8 @@ package org.eclipse.sapphire.ui.swt.gef.actions;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
@@ -91,6 +93,10 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
                     initialFileName.append( editorInputName.substring( 0, editorInputLastDot ) );
                 }
             }
+            // add by tds
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+            initialFileName.append("."+ df.format(new Date()));
+            //
             
             initialFileName.append( ".png" );
 
@@ -118,8 +124,11 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 
             Rectangle rectangle = figure.getBounds();
 
-            Image image = new Image( diagramPresentation.display(), rectangle.width, rectangle.height );
-
+            // edit by tds:switch multiple editors, diagramPresentation.display() is null
+            //Image image = new Image( diagramPresentation.display(), rectangle.width, rectangle.height );
+            Image image = new Image(  diagramEditor.getSite().getShell().getDisplay(), rectangle.width, rectangle.height );
+            //
+            
             FileOutputStream output = null;
             GC gc = null;
             SWTGraphics graphics = null;

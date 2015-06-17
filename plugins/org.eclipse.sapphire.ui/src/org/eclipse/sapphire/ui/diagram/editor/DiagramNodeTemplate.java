@@ -278,6 +278,14 @@ public final class DiagramNodeTemplate extends SapphirePart
         return this.embeddedConnTemplate;
     }
     
+    /**
+     * add by tds
+     * @createtime 2014年8月25日 上午9:31:56
+     */
+    public String getPropertyName() {
+    	return this.propertyName;
+    }
+    
     public void addModelListener()
     {
         this.modelElement.attach(this.modelPropertyListener, this.propertyName);

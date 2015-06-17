@@ -306,7 +306,13 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
             
             if( initialSelectedItem == null )
             {
+            	// add by tds
+            	if ( elements!=null && elements.size() > 0) {
+            	//
                 initialSelectedItem = elements.get( 0 );
+                // add by tds
+            	}
+            	//
             }
             
             list.select( initialSelectedItem );

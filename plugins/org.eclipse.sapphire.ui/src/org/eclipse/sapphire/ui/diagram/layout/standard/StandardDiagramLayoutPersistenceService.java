@@ -156,10 +156,32 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	
 	protected abstract StandardDiagramLayout initLayoutModel();
 	
+	// add by tds：把load拆成两个方法，reload支持额外传入model的XML字符串【不使用系统默认的，撤消操作时使用这种方式】
+	protected StandardDiagramLayout initLayoutModel(String str) {
+		return null;
+	}
+	
+	//提供给子类使用
+	protected void refreshCache() {
+		refreshPersistedPartsCache();
+	}
+	
+	// do nothing 由子类自己实现
+	public void reLoad(String str) throws ResourceStoreException, CoreException, IOException {
+		return;
+	}
+	//
 		
 	public void load() throws ResourceStoreException, CoreException, IOException
 	{
 		this.layoutModel = initLayoutModel();
+		// add by tds
+		_load();
+	}
+    
+	protected void _load() throws ResourceStoreException, CoreException, IOException 
+	{
+		//
 		if (this.layoutModel == null)
 		{
 			return;
@@ -316,6 +338,19 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     	if (this.nodeBounds.containsKey(id) && this.nodeBounds.get(id) != null)
     	{
     		nodePart.setNodeBounds(this.nodeBounds.get(id)); 		
+    	// add by tds 缓存里没有时，从layoytModel中再试着取一次。
+    	} else {
+    		ElementList<DiagramNodeLayout> nodes = this.layoutModel.getDiagramNodesLayout();
+    		for (DiagramNodeLayout node : nodes) {
+    			String nodeId = node.getNodeId().content();
+    			if (nodeId.equals(id)) {
+	    			int x = node.getX().content();
+	    			int y = node.getY().content();
+	    			nodePart.setNodeBounds(x, y);
+	    			break;
+    			}
+    		}
+    	//
     	}
     }
         
@@ -714,11 +749,19 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     
     private DiagramConnectionPart getConnectionPart(ConnectionService connService, ConnectionHashKey connId)
     {
+    	// add by tds ，每次都实时取，否则delete再UNDO时会导致混乱，ID虽没变，但指向的对象已变化
+    	this.connectionIdMap = null;
+    	//
     	if (this.connectionIdMap == null)
     	{
     		this.connectionIdMap = new HashMap<ConnectionHashKey, DiagramConnectionPart>();
     		for (DiagramConnectionPart connPart : connService.list())
     		{
+    			// add by tds
+    			if (ConnectionHashKey.createKey(connPart) == connId) {
+    				return connPart;
+    			}
+    			//
     			this.connectionIdMap.put(ConnectionHashKey.createKey(connPart), connPart);
     		}
     	}
@@ -727,11 +770,19 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     
     private DiagramNodePart getNodePart(String nodeId)
     {
+    	// add by tds ，每次都实时取，否则delete再UNDO时会导致nodePart混乱，nodePart ID虽没变，但指向的对象已变化
+    	this.nodeIdMap = null;
+    	//
     	if (this.nodeIdMap == null)
     	{
     		this.nodeIdMap = new HashMap<String, DiagramNodePart>();
     		for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
     		{
+    			// add by tds
+    			if (nodePart.getId().equals(nodeId)) {
+    				return nodePart;
+    			}
+    			//
     			this.nodeIdMap.put(nodePart.getId(), nodePart);
     		}
     	}

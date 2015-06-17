@@ -91,6 +91,11 @@ public class TextPart extends ShapePart
         }
         
         this.setEditable(!(this.textFunction instanceof Literal));
+        // add by tds
+        if (this.isEditable()) {
+        	this.setEditable(this.textDef.isEditable().content());
+        }
+        //
     }
 	
     @Override

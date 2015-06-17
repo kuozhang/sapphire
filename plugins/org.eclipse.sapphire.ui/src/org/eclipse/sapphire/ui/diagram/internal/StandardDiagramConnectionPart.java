@@ -98,6 +98,12 @@ public class StandardDiagramConnectionPart
 		this.endpoint2Path = endpoint2Path;
 	}
 	
+	// add by tds
+	public IDiagramExplicitConnectionBindingDef getBindingDef() {
+		return this.bindingDef;
+	}
+	//
+	
 	protected void initLabelId()
 	{
     	this.connectionTemplate = (DiagramConnectionTemplate) parent();

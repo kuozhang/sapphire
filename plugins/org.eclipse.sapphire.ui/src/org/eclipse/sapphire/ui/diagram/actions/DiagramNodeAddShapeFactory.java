@@ -71,7 +71,32 @@ public class DiagramNodeAddShapeFactory extends SapphireActionHandlerFactory
             for( ElementType type : shapeFactoryPart.getModelElementList().service( PossibleTypesService.class ).types() )
             {
                 final DiagramNodeAddShapeActionHandler handler = new DiagramNodeAddShapeActionHandler( nodePart, shapeFactoryPart, type );
+                // add by tds
+                String qname = type.getQualifiedName();
+                if (qname.equals("com.chanjet.csp.ide.project.ui.bo.PrimaryEO")) {
+                	continue;
+                }
+                //
                 handlers.add(handler);
+                // add by tds
+                if (qname.equals("com.chanjet.csp.ide.project.ui.bo.Field")) {
+                	final DiagramNodeAddShapeActionHandler shandler = new DiagramNodeAddShapeActionHandler( nodePart, shapeFactoryPart, type );
+                	shandler.setCspParams("SystemField");
+                	handlers.add(shandler);
+                	
+                	final DiagramNodeAddShapeActionHandler cshandler = new DiagramNodeAddShapeActionHandler( nodePart, shapeFactoryPart, type );
+                	cshandler.setCspParams("VirtualField");
+                	handlers.add(cshandler);
+                	
+                	final DiagramNodeAddShapeActionHandler fshandler = new DiagramNodeAddShapeActionHandler( nodePart, shapeFactoryPart, type );
+                    fshandler.setCspParams("FormulaField");
+                    handlers.add(fshandler);
+                } else if (qname.equals("com.chanjet.csp.ide.project.ui.entity.Field")) {
+                	final DiagramNodeAddShapeActionHandler shandler = new DiagramNodeAddShapeActionHandler( nodePart, shapeFactoryPart, type );
+                	shandler.setCspParams("ForeignKeyField");
+                	handlers.add(shandler);
+                }
+                //
             }
         }
         
