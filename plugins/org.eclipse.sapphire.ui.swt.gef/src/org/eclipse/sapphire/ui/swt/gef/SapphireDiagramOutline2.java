@@ -208,7 +208,7 @@ public class SapphireDiagramOutline2 extends Page implements IContentOutlinePage
         String cn = ele.type().getQualifiedName();
         if (cn.equals("com.chanjet.csp.ide.project.ui.entity.Schema")) {
             PNode p = new PNode();
-            p.name = "实体";
+            p.name = "EO";
             p.type = "eo";
             p.nodes = new ArrayList<Node>();
             t.datas.add(p);
@@ -226,7 +226,7 @@ public class SapphireDiagramOutline2 extends Page implements IContentOutlinePage
             }
 
             p = new PNode();
-            p.name = "枚举";
+            p.name = "Enum";
             p.type = "enum";
             p.nodes = new ArrayList<Node>();
             t.datas.add(p);
@@ -528,7 +528,7 @@ public class SapphireDiagramOutline2 extends Page implements IContentOutlinePage
                 Node node = (Node) element;
                 str = node.name;
                 if (node.label != null && !node.label.isEmpty()) {
-                    str += "（" + node.label + "）";
+                    str += "(" + node.label + ")";
                 }
             }
             return str;

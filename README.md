@@ -38,31 +38,15 @@ either lists the URL of the repository (for finished releases) or includes a lin
  
 ### Building
 
-The build is easy to run on a local machine.
-
- 1. Make sure that you have JDK 6 and Ant installed. Both should be on the path.
- 2. Set `JDK_16_HOME` environment variable to point to your JDK 6 install.
- 3. Clone the Sapphire Git repository and pick the desired branch.
- 4. Open a shell to the Git workspace and execute `ant clean-start`.
-
-The build must be able to pull dependencies from the eclipse.org downloads server and its mirrors. If you are behind a proxy, 
-you will need to invoke build with proxy configuration. If the proxy is properly configured at the operating system
-level, you should only need to add `-autoproxy` switch to the build command.
-
-Example: `ant clean-start -autoproxy`
-
-If you are working with multiple Sapphire branches, you may want to share the downloads directory so that every 
-branch does not need to re-download everything it needs. The default downloads folder is 
-`[root]/downloads`, but you can change it by setting the `SAPPHIRE_DOWNLOADS` environment variable or the `downloads`
-property when invoking the build. An absolute path is required in both cases.
-
-Example: `ant clean-start -Ddownloads=d:/sapphire/downloads`
-
-Once the build completes, you will notice the following key folders in the Git workspace:
+ 1. Make sure that you have JDK 6 and JDK 7 and Ant installed. All should be on the path.
+ 2. Set `JDK_6_HOME` environment variable to point to your JDK 6 install.
+ 3. Set `JDK_7_HOME` environment variable to point to your JDK 7 install.
+ 4. Clone the Sapphire Git repository and pick the 8.2.x branch.
+ 5. Open a shell to the Git workspace and execute `ant clean-start -buildfile build-csp.xml`.
+ 
+ Once the build completes, you will notice the following key folders in the Git workspace:
 
  * **build/repository** : Repository of build artifacts, including runtime bundles, source bundles and the SDK.
- * **dev-eclipse** : Eclipse with select plugins along with Sapphire SDK from the build. This Eclipse configuration is designed to be appropriate for working on Sapphire.
- * **dev-target** : Eclipse with select plugins along with all of Sapphire, including source bundles. This Eclipse configuration is designed to make a good target platform. 
 
 ### Contributing
 

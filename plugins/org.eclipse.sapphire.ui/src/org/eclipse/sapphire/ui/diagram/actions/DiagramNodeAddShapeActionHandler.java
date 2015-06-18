@@ -52,7 +52,7 @@ public class DiagramNodeAddShapeActionHandler extends SapphireActionHandler
 	// add by tds
 	private static final Map<String,String> LABELS = new HashMap<String,String>();
 	static {
-		LABELS.put("ForeignKeyField", "ForeignKey型字段");
+		LABELS.put("ForeignKeyField", "ForeignKey Field");
 	}
 	//
 	
