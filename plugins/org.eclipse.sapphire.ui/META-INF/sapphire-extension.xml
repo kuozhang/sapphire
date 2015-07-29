@@ -565,6 +565,7 @@
         <context>Sapphire.EditorPage.Outline.Node</context>
         <condition>org.eclipse.sapphire.ui.forms.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
+    <!--
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandlerFactory</impl>
@@ -578,6 +579,7 @@
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Node.Shape</context>
     </action-handler-factory>
+    -->
     <presentation-style>
         <id>Sapphire.Actuator.Link</id>
         <part-type>Sapphire.Actuator</part-type>
