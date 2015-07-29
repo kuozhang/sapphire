@@ -132,6 +132,8 @@ public abstract class XmlNode
     
     public final void format()
     {
+    	// edit by tds 禁掉format，否则undo操作会多出来一步
+    	// 放开
         validateEdit();
         
         removeFormatting();

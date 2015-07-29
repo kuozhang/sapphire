@@ -101,6 +101,13 @@ public abstract class ElementReferenceService extends ReferenceService<Element>
             }
         );
     }
+    
+    // add by tds: 查找时，使用before，一定几率下能减少同名引起的偏差
+    private Element before = null;
+    public void setBefore(Element before) {
+        this.before = before;
+    }
+    //
 
     @Override
     protected final Element compute()
@@ -130,6 +137,12 @@ public abstract class ElementReferenceService extends ReferenceService<Element>
                 this.list.attach( this.listener, this.key );
             }
         }
+        
+        // add by tds
+        if (before != null && list != null && list.contains(before)) {
+            return before;
+        }
+        //
         
         if( list != null && text != null )
         {

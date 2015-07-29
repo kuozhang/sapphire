@@ -21,6 +21,7 @@ Export-Package: org.eclipse.sapphire.ui,
  org.eclipse.sapphire.ui.diagram.state,
  org.eclipse.sapphire.ui.forms,
  org.eclipse.sapphire.ui.forms.swt,
+ org.eclipse.sapphire.ui.forms.swt.internal,
  org.eclipse.sapphire.ui.listeners,
  org.eclipse.sapphire.ui.util
 Require-Bundle: org.eclipse.sapphire.modeling,

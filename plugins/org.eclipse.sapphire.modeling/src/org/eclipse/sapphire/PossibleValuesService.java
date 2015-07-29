@@ -74,6 +74,9 @@ public abstract class PossibleValuesService extends DataService<Set<String>>
     
     public final Set<String> values()
     {
+    	// add by tds
+    	 refresh();
+    	 //
         return data();
     }
     
