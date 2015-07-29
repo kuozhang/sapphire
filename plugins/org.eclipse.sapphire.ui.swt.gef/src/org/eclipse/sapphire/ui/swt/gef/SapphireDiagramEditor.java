@@ -53,6 +53,7 @@ import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.TransferDropTargetListener;
@@ -145,9 +146,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-// add by tds
-@SuppressWarnings("restriction")
-//
 public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette implements ISapphireEditorActionContributor, EditorPagePresentation
 {
     private final SapphireEditor editor;
@@ -182,7 +180,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 
 	private Map<String,ActionBridge> globalActions;
 
-	private SapphireDiagramOutline2 diagramOutline; // edit by tds:replace outline
+	private SapphireDiagramOutline diagramOutline;
 	
 	private boolean isSelectionFromPagePart = false;
 	
@@ -502,9 +500,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		try {
 			this.part.saveDiagram();
 			markEditorClean();
-			// add by tds:refresh tree
-			this.getDiagramOutline().update(this.element);
-			//
 		} catch (Exception e) {
 		    Sapphire.service( LoggingService.class ).log( e );
 		}
@@ -1022,13 +1017,16 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private void configureDiagramHeading()
 	{
 		decorateHeading();
-		// add by tds
-		CspSearchContribution search = new CspSearchContribution("CSP_SEARCH", this);
-		this.header.getToolBarManager().add(search);
-		this.header.getToolBarManager().add(new Separator());
-		this.header.getToolBarManager().update(true);
-		//
 		
+		// Added by tiands@chanjet.com & zhangkuo@chanjet.com
+		IContributionItem contribution1 = contributeHeadingBeforeActions();
+		if(contribution1 != null)
+		{
+		    this.header.getToolBarManager().add(contribution1);
+		    this.header.getToolBarManager().add(new Separator());
+		    this.header.getToolBarManager().update(true);
+		}
+
         final SapphireActionGroup actions = this.part.getActions( SapphireActionSystem.CONTEXT_DIAGRAM_HEADER );
         if (actions != null && !actions.isEmpty())
         {
@@ -1037,12 +1035,33 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	        actionPresentation.setToolBarManager( this.header.getToolBarManager() );
 	        actionPresentation.render();
         }
-        
+
+		// Added by zhangkuo@chanjet.com
+		IContributionItem contribution2 = contributeHeadingAfterActions();
+		if(contribution2 != null)
+		{
+		    this.header.getToolBarManager().add(new Separator());
+		    this.header.getToolBarManager().add(contribution2);
+		    this.header.getToolBarManager().update(true);
+		}
+
         refreshPageHeaderText();
         refreshPageHeaderImage();
 	}
-	
-	/**
+
+	// Added by zhangkuo@chanjet.com
+	protected IContributionItem contributeHeadingAfterActions()
+	{
+        return null;
+	}
+
+	// Added by zhangkuo@chanjet.com
+	protected IContributionItem contributeHeadingBeforeActions()
+	{
+        return null;
+	}
+
+    /**
 	 * Takes advantage of the gradients and other capabilities to decorate the
 	 * form heading using colors computed based on the current skin and
 	 * operating system.
@@ -1079,16 +1098,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         this.header.layout();
     }
     
-    // add by tds
+    // Added by tiands@chanjet.com
     public FormHeading getPageHeader() {
     	return this.header;
     }
     
-    private Map<String, Image> outLineImages = null;
-    public void setOutLineImages(Map<String, Image> imgs) {
-        this.outLineImages = imgs;
-    }
-    //
 	
 	private void refreshPageHeaderImage()
 	{
@@ -1124,18 +1138,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         return (ZoomManager) getGraphicalViewer().getProperty( ZoomManager.class.toString() );
     }
 
-    private SapphireDiagramOutline2 getDiagramOutline()
+    private SapphireDiagramOutline getDiagramOutline()
 	{
 		if (this.diagramOutline == null && getGraphicalViewer() != null)
 		{
 			RootEditPart rootEditPart = getGraphicalViewer().getRootEditPart();
 			if (rootEditPart instanceof ScalableFreeformRootEditPart)
 			{
-				// edit by tds:replace out line
-				//this.diagramOutline = new SapphireDiagramOutline((ScalableFreeformRootEditPart)rootEditPart);
-				this.diagramOutline = new SapphireDiagramOutline2((ScalableFreeformRootEditPart)rootEditPart, this.element);
-				this.diagramOutline.setOutLineImages(this.outLineImages);
-				//
+				this.diagramOutline = new SapphireDiagramOutline((ScalableFreeformRootEditPart)rootEditPart);
 			}
 		}
 		return this.diagramOutline;			

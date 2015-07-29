@@ -15,13 +15,16 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.createStringDigest;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.help.IContext;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.FileUtil;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.java.JavaType;
@@ -30,7 +33,6 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.ui.cspext.CspSapphireUIUtil;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -40,6 +42,7 @@ import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.forms.swt.HelpSystem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -102,45 +105,15 @@ public class SapphireEditorPagePart
     {
         if( this.state == null )
         {
-            final StringBuilder key = new StringBuilder();
-            
+            // Added by tiands@chanjet.com & zhangkuo@chanjet.com
             final IEditorInput editorInput = adapt( SapphireEditor.class ).getEditorInput();
-            // add by tds
-            File file = null;
-            if (adapt(SapphireEditor.class).getClass().getName().contains("com.chanjet.csp.ide")) {
-            	 file = CspSapphireUIUtil.getStateFile(editorInput);
-            } else {
-            //
-            
-            key.append( editorInput.getClass().getName() );
-            key.append( '#' );
-            
-            if( editorInput instanceof IURIEditorInput )
+
+            File file = getStateFileFromProject(editorInput);
+
+            if (file == null || !file.exists()) 
             {
-                final URI uri = ( (IURIEditorInput) editorInput ).getURI();
-                
-                if( uri != null )
-                {
-                    key.append( ( (IURIEditorInput) editorInput ).getURI().toString() );
-                }
-                else
-                {
-                    key.append( "%$**invalid**$%" );
-                }
-                
-                key.append( '#' );
+                file = getStateFileFormPlugin(editorInput);
             }
-            
-            key.append( definition().getPageName().content() );
-            
-            final String digest = createStringDigest( key.toString() );
-            
-            file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
-            file = new File( file, ".metadata/.plugins/org.eclipse.sapphire.ui/state" );
-            file = new File( file, digest );
-            // add by tds
-            }
-            //
             
             final JavaType persistedStateElementJavaType = definition().getPersistentStateElementType().target();
             
@@ -176,6 +149,77 @@ public class SapphireEditorPagePart
         }
         
         return this.state;
+    }
+
+    // Added by zhangkuo@chanjet.com
+    protected File getStateFileFromProject(IEditorInput editorInput)
+    {
+        if (editorInput instanceof FileEditorInput)
+        {
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+            IFile ifile = fileEditorInput.getFile();
+            String projectPath = ifile.getProject().getLocation().toPortableString();
+            File folder = new File(projectPath, ".settings");
+            if (!folder.exists())
+            {
+                try 
+                {
+                    FileUtil.mkdirs(folder);
+                } catch (IOException e)
+                {
+                    // do nothing
+                }
+            }
+
+            File file = new File(folder, ifile.getName() + ".state");
+            if (!file.exists()) 
+            {
+                try 
+                {
+                    file.createNewFile();
+                } catch (IOException e)
+                {
+                    // do nothing
+                }
+            }
+
+            return file;
+        }
+        return null;
+    }
+
+    // Added by zhangkuo@chanjet.com
+    protected File getStateFileFormPlugin(IEditorInput editorInput)
+    {
+        final StringBuilder key = new StringBuilder();
+        key.append(editorInput.getClass().getName());
+        key.append('#');
+
+        if (editorInput instanceof IURIEditorInput)
+        {
+            final URI uri = ((IURIEditorInput) editorInput).getURI();
+
+            if (uri != null)
+            {
+                key.append(((IURIEditorInput) editorInput).getURI().toString());
+            }
+            else
+            {
+                key.append("%$**invalid**$%");
+            }
+
+            key.append('#');
+        }
+
+        key.append(definition().getPageName().content());
+
+        final String digest = createStringDigest(key.toString());
+
+        File file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+        file = new File(file, ".metadata/.plugins/org.eclipse.sapphire.ui/state");
+        file = new File(file, digest);
+
+        return file;
     }
 
     @Override

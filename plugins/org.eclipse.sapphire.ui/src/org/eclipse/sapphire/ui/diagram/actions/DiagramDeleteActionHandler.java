@@ -24,7 +24,6 @@ import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
-import org.eclipse.sapphire.ui.cspext.CspSapphireUIUtil;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
@@ -99,9 +98,6 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
         if (part instanceof DiagramConnectionPart)
         {
             DiagramConnectionPart connPart = (DiagramConnectionPart)part;
-            // add by tds
-            CspSapphireUIUtil.handleDelete(part);
-			//
             connPart.remove();   
         }
         else if (part instanceof DiagramNodePart)
@@ -160,9 +156,6 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
     
     private void deleteNode(DiagramNodePart nodePart)
     {
-    	// add by tds
-        CspSapphireUIUtil.handleDelete(nodePart);
-    	//
         // Need to remove connection parts that are associated with this node
         deleteNodeConnections(nodePart);
         
@@ -171,9 +164,6 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
     
     private void deleteShapePart(ShapePart shapePart)
     {
-        // add by tds
-        CspSapphireUIUtil.handleDelete(shapePart);
-        //
     	Element shapeModel = shapePart.getLocalModelElement();
     	ElementList<?> list = (ElementList<?>) shapeModel.parent();
     	if (!list.disposed())
